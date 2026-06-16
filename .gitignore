@@ -1,0 +1,13 @@
+node_modules
+dist
+.env
+**/*Zone.Identifier
+.DS_Store
+tmp
+.astro
+tmp
+docs/.vitepress/cache
+docs/.vitepress/dist
+docs/.env
+.env.local
+.output

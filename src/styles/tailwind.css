@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms' {
+  strategy: 'class';
+}
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/aspect-ratio';
+
+@theme {
+  --font-sans: InterVariable, sans-serif;
+  --font-mono: Roboto Mono, monospace;
+  --font-poppins: Poppins, sans-serif;
+  --font-raleway: Raleway, sans-serif;
+}
+
+/* Disable dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Aumenta la foto y la letra en el botón de Clerk. */
+.cl-userButtonBox {
+  .cl-avatarBox {
+    @apply lg:size-[35px];
+  }
+  .cl-userButtonOuterIdentifier {
+    @apply text-base;
+  }
+}

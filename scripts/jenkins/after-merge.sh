@@ -14,7 +14,9 @@ make build
 
 make lint
 
+eval "$(whisper build)"
 whisper deploy
+
 pnpm run deploy
 
 wave ar cdn-assets-manager --repo apps --source .

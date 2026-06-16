@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "convex": "convex dev",
     "dev": "vite",
     "build": "vite build",
     "lint": "vue-tsc --noEmit && oxlint",
@@ -11,12 +12,17 @@
   },
   "dependencies": {
     "@altipla/oxlint-config": "^0.1.6",
+    "@tanstack/vue-query": "^5.85.5",
+    "@tanstack/vue-query-devtools": "^5.85.5",
     "@sentry/vite-plugin": "^5.3.0",
     "@sentry/vue": "^10.57.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.1",
+    "convex": "^1.26.1",
+    "convex-vue": "^0.1.5",
+    "convex-vue-query": "^0.1.2",
     "oxlint-tsgolint": "^0.23.0",
     "tailwindcss": "^4.3.1",
     "vue": "^3.5.32"

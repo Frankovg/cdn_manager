@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "convex": "convex dev",
     "dev": "vite",
     "build": "vite build",
     "lint": "vue-tsc --noEmit && oxlint",
-    "fix": "oxlint --fix"
+    "fix": "oxlint --fix",
+    "convex": "convex dev",
+    "deploy": "convex deploy --cmd 'pnpm build'",
+    "convex:bin": "convex"
   },
   "dependencies": {
     "@altipla/oxlint-config": "^0.1.6",

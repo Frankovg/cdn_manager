@@ -1,0 +1,272 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-ink: #141922;
+  --color-muted: #697180;
+  --color-paper: #f5f6f2;
+  --color-surface: #ffffff;
+  --color-line: #dfe3df;
+  --color-blue: #3563dc;
+  --color-blue-dark: #2447a5;
+  --color-coral: #f16d55;
+  --font-display: "Space Grotesk", "Arial Narrow", sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+:root {
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-surface);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-blue);
+  --primary-foreground: #ffffff;
+  --secondary: #e7eaf0;
+  --secondary-foreground: var(--color-ink);
+  --muted: #eef0eb;
+  --muted-foreground: var(--color-muted);
+  --accent: #eef0eb;
+  --accent-foreground: var(--color-ink);
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --border: var(--color-line);
+  --input: var(--color-line);
+  --ring: var(--color-blue);
+  --radius: 0.35rem;
+}
+
+@utility btn-primary {
+  @apply inline-flex items-center gap-4 rounded-sm border-0 bg-blue px-4 py-3 text-xs font-semibold text-white transition hover:bg-blue-dark;
+}
+
+@utility btn-secondary {
+  @apply inline-flex items-center gap-4 rounded-sm border-0 bg-zinc-200 px-4 py-3 text-xs font-semibold text-ink transition hover:bg-zinc-300;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 20rem;
+    background: var(--color-paper);
+  }
+
+  body {
+    margin: 0;
+    min-width: 20rem;
+    min-height: 100vh;
+    color: var(--color-ink);
+    background: var(--color-paper);
+    font-family: var(--font-body);
+  }
+
+  button,
+  a {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 3px solid var(--color-coral);
+    outline-offset: 4px;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin-top: 0;
+  }
+}
+
+@layer components {
+  .ui-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.35rem;
+    padding: 0.7rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .ui-button-default {
+    background: var(--color-blue);
+    color: white;
+  }
+
+  .ui-button-default:hover:not(:disabled) {
+    background: var(--color-blue-dark);
+  }
+
+  .ui-button-outline {
+    border-color: var(--color-line);
+    background: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  .ui-button-outline:hover:not(:disabled),
+  .ui-button-secondary:hover:not(:disabled) {
+    border-color: var(--color-blue);
+    background: var(--color-paper);
+  }
+
+  .ui-button-secondary {
+    background: #e7eaf0;
+    color: var(--color-ink);
+  }
+
+  .ui-button-ghost {
+    background: transparent;
+    color: var(--color-muted);
+  }
+
+  .ui-button-ghost:hover:not(:disabled) {
+    background: rgba(223, 227, 223, 0.55);
+    color: var(--color-ink);
+  }
+
+  .ui-button-link {
+    background: transparent;
+    color: var(--color-blue);
+    padding: 0.35rem 0;
+  }
+
+  .ui-button-destructive {
+    background: #b42318;
+    color: white;
+  }
+
+  .ui-button-sm {
+    min-height: 2rem;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.7rem;
+  }
+
+  .ui-button-lg {
+    min-height: 3rem;
+    padding: 0.9rem 1.3rem;
+  }
+
+  .ui-button-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+  }
+
+  .ui-input,
+  .ui-textarea {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    border-radius: 0.35rem;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 0.8125rem;
+    outline: none;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .ui-input {
+    min-height: 2.5rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .ui-input::-webkit-search-cancel-button {
+    cursor: pointer;
+  }
+
+  .ui-textarea {
+    min-height: 5rem;
+    padding: 0.65rem 0.75rem;
+    resize: vertical;
+  }
+
+  .ui-input:focus,
+  .ui-textarea:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(53, 99, 220, 0.14);
+  }
+
+  .ui-input:disabled,
+  .ui-textarea:disabled {
+    opacity: 0.6;
+  }
+
+  .ui-separator {
+    width: 100%;
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  .ui-scroll-area {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-color: #c7ccd4 transparent;
+    scrollbar-width: thin;
+  }
+}
+
+@theme inline {
+  --font-heading: var(--font-body);
+  --font-sans: var(--font-body);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -143,7 +143,9 @@ provideProjectsContext({
 watch(
   () => [authState.isLoaded, authState.isSignedIn],
   ([loaded, signedIn]) => {
-    if (loaded && signedIn && !health.value) void load();
+    if (loaded && signedIn && !health.value) {
+      void load();
+    }
   },
   { immediate: true },
 );

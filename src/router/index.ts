@@ -16,11 +16,17 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  if (to.name === "sign-in") return true;
+  if (to.name === "sign-in") {
+    return true;
+  }
   // AuthGate blocks all content while Clerk resolves the session. The first navigation must
   // complete so Clerk can mount and publish that state; App.vue redirects once it is known.
-  if (!authState.isLoaded) return true;
-  if (authState.isSignedIn) return true;
+  if (!authState.isLoaded) {
+    return true;
+  }
+  if (authState.isSignedIn) {
+    return true;
+  }
   return { name: "sign-in", query: { redirect: to.fullPath } };
 });
 

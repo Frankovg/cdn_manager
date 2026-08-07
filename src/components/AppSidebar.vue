@@ -223,7 +223,9 @@ const editedProjectName = ref("");
 
 const filteredProjects = computed(() => {
   const query = projectSearch.value.trim().toLowerCase();
-  if (!query) return projects.value;
+  if (!query) {
+    return projects.value;
+  }
   return projects.value.filter((project) =>
     project.name.toLowerCase().includes(query),
   );
@@ -256,7 +258,9 @@ const newProjectName = ref("");
 
 function submitProject(): void {
   const name = newProjectName.value.trim();
-  if (!name || creatingProject.value) return;
+  if (!name || creatingProject.value) {
+    return;
+  }
   void createProject(name);
   newProjectName.value = "";
 }
@@ -264,7 +268,9 @@ function submitProject(): void {
 const renameInput = ref<{ $el?: HTMLElement } | null>(null);
 
 async function startRename(): Promise<void> {
-  if (!selectedProject.value?.name || !canManageProjects.value) return;
+  if (!selectedProject.value?.name || !canManageProjects.value) {
+    return;
+  }
   editedProjectName.value = selectedProject.value.name;
   editingName.value = true;
   await nextTick();
@@ -277,7 +283,9 @@ async function startRename(): Promise<void> {
 
 function submitRename(): void {
   const name = editedProjectName.value.trim();
-  if (!name || renamingProject.value) return;
+  if (!name || renamingProject.value) {
+    return;
+  }
   void renameProject(name);
 }
 </script>

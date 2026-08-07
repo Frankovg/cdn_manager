@@ -16,7 +16,9 @@ export const get = query({
   handler: async (ctx, args) => {
     await requireAuthenticatedUser(ctx);
     const project = await ctx.db.get(args.projectId);
-    if (!project) throw new Error("The project does not exist.");
+    if (!project) {
+      throw new Error("The project does not exist.");
+    }
     return project;
   },
 });
@@ -30,7 +32,9 @@ export const canManage = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("You are not authenticated.");
+    if (!identity) {
+      throw new Error("You are not authenticated.");
+    }
     return hasProjectsPermission(identity);
   },
 });
@@ -54,7 +58,9 @@ export const rename = mutation({
   handler: async (ctx, args) => {
     await requireProjectsPermission(ctx);
     const project = await ctx.db.get(args.projectId);
-    if (!project) throw new Error("The project does not exist.");
+    if (!project) {
+      throw new Error("The project does not exist.");
+    }
     await ctx.db.patch(args.projectId, {
       name: normalizeRequiredText(args.name, "Project name"),
       updatedAt: Date.now(),

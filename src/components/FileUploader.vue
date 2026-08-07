@@ -133,7 +133,9 @@ const { startUpload } = useUploadThing("imageUploader", {
   uploadProgressGranularity: "fine",
   headers: async () => {
     const token = await getToken.value({ template: "convex" });
-    if (!token) throw new Error("Tu sesión no es válida para subir imágenes.");
+    if (!token) {
+      throw new Error("Tu sesión no es válida para subir imágenes.");
+    }
     return {
       Authorization: `Bearer ${token}`,
       "X-CDN-Project-ID": props.projectId,
@@ -142,7 +144,9 @@ const { startUpload } = useUploadThing("imageUploader", {
   onUploadProgress: (value) => {
     progress.value = value;
     files.value.forEach((item) => {
-      if (item.status === "uploading") item.progress = value;
+      if (item.status === "uploading") {
+        item.progress = value;
+      }
     });
   },
 });
@@ -219,9 +223,13 @@ const readyFiles = computed(() =>
 );
 
 async function upload(): Promise<void> {
-  if (!readyFiles.value.length || isUploading.value) return;
+  if (!readyFiles.value.length || isUploading.value) {
+    return;
+  }
   const batch = readyFiles.value.filter((item) => !validate(item.file));
-  if (!batch.length) return;
+  if (!batch.length) {
+    return;
+  }
   batch.forEach((item) => {
     item.progress = 0;
     item.error = undefined;
@@ -236,7 +244,9 @@ async function upload(): Promise<void> {
       try {
         const uploaded = await startUpload([item.file]);
         const result = uploaded?.[0];
-        if (!result) throw new Error("UploadThing no devolvió el archivo.");
+        if (!result) {
+          throw new Error("UploadThing no devolvió el archivo.");
+        }
         item.status = "completed";
         item.progress = 100;
         successes.push({
@@ -254,7 +264,9 @@ async function upload(): Promise<void> {
             : "No se pudo subir el archivo.";
       }
     }
-    if (successes.length) emit("uploaded", successes);
+    if (successes.length) {
+      emit("uploaded", successes);
+    }
     const errors = files.value.filter((item) => item.status === "error").length;
     if (errors) {
       toast.error(

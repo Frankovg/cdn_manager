@@ -24,7 +24,9 @@ export const listByProject = query({
   handler: async (ctx, args) => {
     await requireAuthenticatedUser(ctx);
     const project = await ctx.db.get(args.projectId);
-    if (!project) throw new Error("The project does not exist.");
+    if (!project) {
+      throw new Error("The project does not exist.");
+    }
     return ctx.db
       .query("images")
       .withIndex("by_project_uploaded_at", (query) => query.eq("projectId", args.projectId))
@@ -40,13 +42,17 @@ export const recordCompletedUpload = internalMutation({
     validateImageFile(args.originalFilename, args.mimeType, args.sizeBytes);
     validatePublicUploadThingUrl(args.publicUrl, args.fileKey);
     const project = await ctx.db.get(args.projectId);
-    if (!project) throw new Error("The project does not exist.");
+    if (!project) {
+      throw new Error("The project does not exist.");
+    }
 
     const existing = await ctx.db
       .query("images")
       .withIndex("by_file_key", (query) => query.eq("fileKey", args.fileKey))
       .unique();
-    if (existing) return existing._id;
+    if (existing) {
+      return existing._id;
+    }
 
     return ctx.db.insert("images", {
       ...args,
@@ -71,13 +77,17 @@ export const recordUploadedImage = mutation({
     validateImageFile(args.originalFilename, args.mimeType, args.sizeBytes);
     validatePublicUploadThingUrl(args.publicUrl, args.fileKey);
     const project = await ctx.db.get(args.projectId);
-    if (!project) throw new Error("The project does not exist.");
+    if (!project) {
+      throw new Error("The project does not exist.");
+    }
 
     const existing = await ctx.db
       .query("images")
       .withIndex("by_file_key", (query) => query.eq("fileKey", args.fileKey))
       .unique();
-    if (existing) return existing._id;
+    if (existing) {
+      return existing._id;
+    }
 
     return ctx.db.insert("images", {
       ...args,
@@ -99,7 +109,9 @@ export const updateMetadata = mutation({
   handler: async (ctx, args) => {
     await requireAuthenticatedUser(ctx);
     const image = await ctx.db.get(args.imageId);
-    if (!image) throw new Error("The image does not exist.");
+    if (!image) {
+      throw new Error("The image does not exist.");
+    }
 
     const title = normalizeRequiredText(args.title, "Title");
     const description = args.description?.trim();

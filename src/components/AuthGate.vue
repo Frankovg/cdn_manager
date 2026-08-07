@@ -61,6 +61,8 @@ if (clerkPublishableKey) {
 }
 
 onMounted(() => {
-  if (!clerkPublishableKey) setAuthState({ isLoaded: true });
+  if (!clerkPublishableKey) {
+    setAuthState({ isLoaded: true });
+  }
 });
 </script>

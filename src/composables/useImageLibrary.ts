@@ -56,7 +56,9 @@ export function useImageLibrary(
   }
 
   async function handleUploaded(uploaded: UploadedFile[]): Promise<void> {
-    if (!convex || !selectedProjectId.value) return;
+    if (!convex || !selectedProjectId.value) {
+      return;
+    }
     const failed: string[] = [];
 
     for (const file of uploaded) {
@@ -83,7 +85,9 @@ export function useImageLibrary(
       });
     }
 
-    if (!registered) return;
+    if (!registered) {
+      return;
+    }
     if (registered === 1 && !failed.length) {
       try {
         await navigator.clipboard.writeText(uploaded[0].ufsUrl);
@@ -110,7 +114,9 @@ export function useImageLibrary(
     title: string,
     description?: string,
   ): Promise<void> {
-    if (!convex) return;
+    if (!convex) {
+      return;
+    }
     try {
       await updateImageMetadata(convex, image._id, title, description);
       const current = images.value.find((item) => item._id === image._id);

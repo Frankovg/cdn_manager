@@ -22,12 +22,16 @@ async function authenticateUploadRequest(request: Request): Promise<{
   authorEmail?: string;
 }> {
   const authorization = request.headers.get("Authorization");
-  if (!authorization) throw new UploadThingError("You must sign in to upload images.");
+  if (!authorization) {
+    throw new UploadThingError("You must sign in to upload images.");
+  }
   try {
     const response = await fetch(`${requiredEnv("CONVEX_SITE_URL").replace(/\/$/, "")}/uploadthing-auth`, {
       headers: { Authorization: authorization },
     });
-    if (!response.ok) throw new Error("Convex rejected the session.");
+    if (!response.ok) {
+      throw new Error("Convex rejected the session.");
+    }
     const identity: unknown = await response.json();
     if (!identity || typeof identity !== "object" || typeof (identity as { clerkUserId?: unknown }).clerkUserId !== "string") {
       throw new Error("Convex did not return a valid identity.");
@@ -49,7 +53,9 @@ async function authenticateUploadRequest(request: Request): Promise<{
 
 function readProjectId(request: Request): string {
   const projectId = request.headers.get("X-CDN-Project-ID")?.trim();
-  if (!projectId) throw new Error("Specify the project before uploading images.");
+  if (!projectId) {
+    throw new Error("Specify the project before uploading images.");
+  }
   return projectId;
 }
 
@@ -77,7 +83,9 @@ async function validateProjectExists(projectId: string): Promise<void> {
     },
     body: JSON.stringify({ projectId }),
   });
-  if (!response.ok) throw new UploadThingError("The selected project does not exist.");
+  if (!response.ok) {
+    throw new UploadThingError("The selected project does not exist.");
+  }
 }
 
 /** Server-only UploadThing endpoints served by Astro's /api/upload route. */
@@ -100,7 +108,9 @@ export const uploadRouter = {
       const user = await authenticateUploadRequest(req);
       const projectId = readProjectId(req);
       await validateProjectExists(projectId);
-      for (const file of files) validateImageFile(file.name, file.type, file.size);
+      for (const file of files) {
+        validateImageFile(file.name, file.type, file.size);
+      }
       return { ...user, projectId };
     })
     .onUploadComplete(async ({ file, metadata }) => {

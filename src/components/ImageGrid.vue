@@ -146,7 +146,9 @@ const hasDateRange = computed(() =>
 
 const dateRangeLabel = computed(() => {
   const { start, end } = appliedDateRange.value;
-  if (!start || !end) return null;
+  if (!start || !end) {
+    return null;
+  }
   const formatter = new Intl.DateTimeFormat("es", { dateStyle: "medium" });
   const timeZone = getLocalTimeZone();
   return `${formatter.format(start.toDate(timeZone))} – ${formatter.format(end.toDate(timeZone))}`;
@@ -160,9 +162,12 @@ const filteredImages = computed(() => {
     if (
       hasDateRange.value &&
       !isUploadedInRange(image.uploadedAt, appliedDateRange.value)
-    )
+    ) {
       return false;
-    if (!query) return true;
+    }
+    if (!query) {
+      return true;
+    }
     return [image.title, image.description, image.originalFilename].some(
       (value) => value?.toLowerCase().includes(query),
     );
@@ -182,7 +187,9 @@ function clearDateRange(): void {
 }
 
 function isUploadedInRange(uploadedAt: number, range: DateRange): boolean {
-  if (!range.start || !range.end) return true;
+  if (!range.start || !range.end) {
+    return true;
+  }
   const timeZone = getLocalTimeZone();
   const start = range.start.toDate(timeZone).getTime();
   const end = range.end.toDate(timeZone).getTime() + 24 * 60 * 60 * 1000 - 1;
@@ -213,7 +220,9 @@ async function copyUrl(image: ImageRecord): Promise<void> {
   toast.success("URL copiada", { duration: 2200 });
   copiedId.value = image._id;
   window.setTimeout(() => {
-    if (copiedId.value === image._id) copiedId.value = null;
+    if (copiedId.value === image._id) {
+      copiedId.value = null;
+    }
   }, 1800);
 }
 </script>

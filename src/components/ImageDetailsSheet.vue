@@ -183,7 +183,9 @@ function cancel(): void {
 const saving = ref(false);
 
 async function save(): Promise<void> {
-  if (!props.image) return;
+  if (!props.image) {
+    return;
+  }
   if (!editTitle.value.trim() || saving.value) {
     editError.value = "El título es obligatorio.";
     return;

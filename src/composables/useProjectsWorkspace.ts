@@ -81,8 +81,12 @@ export function useProjectsWorkspace(
     const current = route.query.project;
     const nextValue = projectId || undefined;
 
-    if (typeof current === "string" && current === nextValue) return;
-    if (!current && !nextValue) return;
+    if (typeof current === "string" && current === nextValue) {
+      return;
+    }
+    if (!current && !nextValue) {
+      return;
+    }
 
     const query: LocationQuery = { ...route.query };
     if (nextValue) {
@@ -94,7 +98,9 @@ export function useProjectsWorkspace(
   }
 
   async function loadProjects(): Promise<void> {
-    if (!convex) return;
+    if (!convex) {
+      return;
+    }
 
     projectsLoading.value = true;
     projectsError.value = null;
@@ -124,7 +130,9 @@ export function useProjectsWorkspace(
   }
 
   async function submitProject(name: string): Promise<void> {
-    if (!convex || !name.trim() || creatingProject.value) return;
+    if (!convex || !name.trim() || creatingProject.value) {
+      return;
+    }
 
     creatingProject.value = true;
     createError.value = null;
@@ -180,7 +188,9 @@ export function useProjectsWorkspace(
   watch(
     () => route.query.project,
     () => {
-      if (!projects.value.length) return;
+      if (!projects.value.length) {
+        return;
+      }
       const resolved = resolveProjectId(projects.value, route.query);
       if (resolved !== selectedProjectId.value) {
         selectedProjectId.value = resolved;

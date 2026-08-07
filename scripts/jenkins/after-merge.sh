@@ -17,7 +17,7 @@ make test
 eval "$(whisper build)"
 whisper deploy
 
-pnpm deploy
+pnpm run deploy
 
 wave ar cdn-assets-manager --repo apps --source .
 # wave deploy cdn-assets-manager --repo apps

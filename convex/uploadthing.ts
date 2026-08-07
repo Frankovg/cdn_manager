@@ -16,7 +16,9 @@ interface CompletedUploadPayload {
 
 function requiredCallbackSecret(): string {
   const secret = process.env.UPLOADTHING_CALLBACK_SECRET;
-  if (!secret) throw new Error("UPLOADTHING_CALLBACK_SECRET is missing in Convex.");
+  if (!secret) {
+    throw new Error("UPLOADTHING_CALLBACK_SECRET is missing in Convex.");
+  }
   return secret;
 }
 
@@ -28,9 +30,13 @@ function unauthorized(): Response {
 }
 
 export const authenticate = httpAction(async (ctx, request) => {
-  if (request.method !== "GET") return new Response("Method not allowed", { status: 405 });
+  if (request.method !== "GET") {
+    return new Response("Method not allowed", { status: 405 });
+  }
   const identity = await ctx.auth.getUserIdentity();
-  if (!identity) return unauthorized();
+  if (!identity) {
+    return unauthorized();
+  }
   return Response.json({
     clerkUserId: identity.subject,
     ...(identity.name || identity.preferredUsername
@@ -41,7 +47,9 @@ export const authenticate = httpAction(async (ctx, request) => {
 });
 
 function isCompletedUploadPayload(value: unknown): value is CompletedUploadPayload {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
   const payload = value as Record<string, unknown>;
   return typeof payload.projectId === "string"
     && typeof payload.fileKey === "string"
@@ -79,15 +87,21 @@ export const complete = httpAction(async (ctx, request) => {
 });
 
 export const validateProject = httpAction(async (ctx, request) => {
-  if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
-  if (request.headers.get("Authorization") !== `Bearer ${requiredCallbackSecret()}`) return unauthorized();
+  if (request.method !== "POST") {
+    return new Response("Method not allowed", { status: 405 });
+  }
+  if (request.headers.get("Authorization") !== `Bearer ${requiredCallbackSecret()}`) {
+    return unauthorized();
+  }
   try {
     const body: unknown = await request.json();
     if (!body || typeof body !== "object" || typeof (body as { projectId?: unknown }).projectId !== "string") {
       return new Response(JSON.stringify({ error: "Invalid project." }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
     const project = await ctx.runQuery(internal.projects.getForUpload, { projectId: (body as { projectId: string }).projectId as Id<"projects"> });
-    if (!project) return new Response(JSON.stringify({ error: "The project does not exist." }), { status: 404, headers: { "Content-Type": "application/json" } });
+    if (!project) {
+      return new Response(JSON.stringify({ error: "The project does not exist." }), { status: 404, headers: { "Content-Type": "application/json" } });
+    }
     return new Response(null, { status: 204 });
   } catch {
     return new Response(JSON.stringify({ error: "Invalid project." }), { status: 400, headers: { "Content-Type": "application/json" } });

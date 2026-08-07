@@ -14,7 +14,7 @@ function identity(claims: Record<string, unknown> = {}): UserIdentity {
     subject: "user_123",
     issuer: "https://clerk.example",
     ...claims,
-  } as UserIdentity;
+  };
 }
 
 describe("project permission", () => {

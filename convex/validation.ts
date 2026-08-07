@@ -19,7 +19,9 @@ export function normalizeRequiredText(
   fieldName: string,
 ): string {
   const normalized = value.trim();
-  if (!normalized) domainError(`${fieldName} is required.`);
+  if (!normalized) {
+    domainError(`${fieldName} is required.`);
+  }
   return normalized;
 }
 

@@ -4,11 +4,8 @@ coverage/
 .vite/
 
 # Local environment files. Keep the example templates tracked.
+.env.local
 .env
-.env.*
-!.env.example
-!.env.development.example
-!.env.production.example
 
 # Local Convex/generated state and upload-server logs
 .convex/

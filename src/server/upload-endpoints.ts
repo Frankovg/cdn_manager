@@ -4,7 +4,7 @@ import {
   UploadThingError,
   type FileRouter,
 } from "uploadthing/server";
-import { validateImageFile, validatePublicUploadThingUrl } from "../convex/validation.js";
+import { validateImageFile, validatePublicUploadThingUrl } from "../../convex/validation.js";
 
 function requiredEnv(name: string): string {
   const value = process.env[name];
@@ -80,10 +80,7 @@ async function validateProjectExists(projectId: string): Promise<void> {
   if (!response.ok) throw new UploadThingError("The selected project does not exist.");
 }
 
-/**
- * UploadThing's framework-neutral Fetch router. It is deliberately kept in a
- * server-only module so UPLOADTHING_TOKEN never enters the Vite dependency graph.
- */
+/** Server-only UploadThing endpoints served by Astro's /api/upload route. */
 export const uploadRouter = {
   imageUploader: f({
     "image/jpeg": {
@@ -126,7 +123,6 @@ export const uploadRouter = {
 
 export type UploadRouter = typeof uploadRouter;
 
-/** Handler for both GET and POST requests at the configured upload endpoint. */
 const uploadThingHandler = createRouteHandler({
   router: uploadRouter,
   config: {
@@ -134,7 +130,6 @@ const uploadThingHandler = createRouteHandler({
   },
 });
 
-/** Portable Fetch handler used by serverless runtimes and the local Node adapter. */
 export async function handleUploadThingRequest(request: Request): Promise<Response> {
   return uploadThingHandler(request);
 }

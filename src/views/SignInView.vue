@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { SignIn } from "@clerk/vue";
 
-const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
+const clerkPublishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
 
 const signInAppearance = {
   variables: {

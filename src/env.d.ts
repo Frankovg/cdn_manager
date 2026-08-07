@@ -1,9 +1,9 @@
-/// <reference types="vite/client" />
+/// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_CLERK_PUBLISHABLE_KEY?: string;
-  readonly VITE_CONVEX_URL?: string;
-  readonly VITE_UPLOAD_ENDPOINT_URL?: string;
+  readonly PUBLIC_CLERK_PUBLISHABLE_KEY?: string;
+  readonly PUBLIC_CONVEX_URL?: string;
+  readonly PUBLIC_UPLOAD_ENDPOINT_URL?: string;
 }
 
 interface ImportMeta {

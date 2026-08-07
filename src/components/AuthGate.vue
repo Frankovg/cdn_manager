@@ -31,8 +31,8 @@ import { attachClerkToken } from "@/services/convex";
 
 const route = useRoute();
 
-const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
-const convexUrl = import.meta.env.VITE_CONVEX_URL?.trim();
+const clerkPublishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
+const convexUrl = import.meta.env.PUBLIC_CONVEX_URL?.trim();
 const convex = convexUrl ? useConvexClient() : null;
 
 if (clerkPublishableKey) {

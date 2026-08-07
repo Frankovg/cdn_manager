@@ -73,7 +73,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const convexUrl = import.meta.env.VITE_CONVEX_URL?.trim();
+const convexUrl = import.meta.env.PUBLIC_CONVEX_URL?.trim();
 const convex = convexUrl ? useConvexClient() : null;
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -108,7 +108,7 @@ const health = ref<AuthenticatedHealth | null>(null);
 
 async function load(): Promise<void> {
   if (!convex) {
-    error.value = "Añade VITE_CONVEX_URL para conectar con Convex.";
+    error.value = "Añade PUBLIC_CONVEX_URL para conectar con Convex.";
     loading.value = false;
     return;
   }

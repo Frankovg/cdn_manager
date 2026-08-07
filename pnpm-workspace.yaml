@@ -1,4 +1,3 @@
 onlyBuiltDependencies:
-  - esbuild
   - msgpackr-extract
   - vue-demi

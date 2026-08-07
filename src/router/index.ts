@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { authState } from "@/services/auth-state";
-import SignInView from "@/pages/SignInView.vue";
-import WorkbenchView from "@/pages/WorkbenchView.vue";
-import NotFoundView from "@/pages/NotFoundView.vue";
+import SignInView from "@/views/SignInView.vue";
+import WorkbenchView from "@/views/WorkbenchView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(),

@@ -8,5 +8,5 @@ type UploadRouter = { imageUploader: AnyFileRoute }
  * server token and Clerk secret can never be pulled into the Vite browser bundle.
  */
 export const { useUploadThing } = generateVueHelpers<UploadRouter>({
-  url: import.meta.env.VITE_UPLOAD_ENDPOINT_URL?.trim() ?? '/api/upload',
+  url: import.meta.env.PUBLIC_UPLOAD_ENDPOINT_URL?.trim() ?? '/api/upload',
 })

@@ -102,9 +102,6 @@
             </Button>
           </form>
         </template>
-        <p v-else class="m-0 text-[0.7rem] leading-relaxed text-slate-400">
-          La gestión de proyectos requiere de un permiso.
-        </p>
         <p
           v-if="projectsError || createError"
           class="m-0 text-[0.7rem] leading-relaxed text-[#ff9b87]"

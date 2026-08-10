@@ -4,7 +4,10 @@ import {
   UploadThingError,
   type FileRouter,
 } from "uploadthing/server";
-import { validateImageFile, validatePublicUploadThingUrl } from "../../convex/validation.js";
+import {
+  validateImageFile,
+  validatePublicUploadThingUrl,
+} from "../../convex/validation.js";
 
 function requiredEnv(name: string): string {
   const value = process.env[name];
@@ -26,28 +29,45 @@ async function authenticateUploadRequest(request: Request): Promise<{
     throw new UploadThingError("You must sign in to upload images.");
   }
   try {
-    const response = await fetch(`${requiredEnv("CONVEX_SITE_URL").replace(/\/$/, "")}/uploadthing-auth`, {
-      headers: { Authorization: authorization },
-    });
+    const response = await fetch(
+      `${requiredEnv("CONVEX_ACTIONS_URL").replace(/\/$/, "")}/uploadthing-auth`,
+      {
+        headers: { Authorization: authorization },
+      },
+    );
     if (!response.ok) {
       throw new Error("Convex rejected the session.");
     }
     const identity: unknown = await response.json();
-    if (!identity || typeof identity !== "object" || typeof (identity as { clerkUserId?: unknown }).clerkUserId !== "string") {
+    if (
+      !identity ||
+      typeof identity !== "object" ||
+      typeof (identity as { clerkUserId?: unknown }).clerkUserId !== "string"
+    ) {
       throw new Error("Convex did not return a valid identity.");
     }
-    const user = identity as { clerkUserId: string; authorName?: unknown; authorEmail?: unknown };
+    const user = identity as {
+      clerkUserId: string;
+      authorName?: unknown;
+      authorEmail?: unknown;
+    };
     return {
       clerkUserId: user.clerkUserId,
-      ...(typeof user.authorName === "string" && user.authorName ? { authorName: user.authorName } : {}),
-      ...(typeof user.authorEmail === "string" && user.authorEmail ? { authorEmail: user.authorEmail } : {}),
+      ...(typeof user.authorName === "string" && user.authorName
+        ? { authorName: user.authorName }
+        : {}),
+      ...(typeof user.authorEmail === "string" && user.authorEmail
+        ? { authorEmail: user.authorEmail }
+        : {}),
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     console.error(
       `Convex rejected the UploadThing session (origin: ${request.headers.get("origin") ?? "no origin"}): ${message}`,
     );
-    throw new UploadThingError("The Clerk session is invalid, expired, or does not belong to this origin.");
+    throw new UploadThingError(
+      "The Clerk session is invalid, expired, or does not belong to this origin.",
+    );
   }
 }
 
@@ -59,30 +79,40 @@ function readProjectId(request: Request): string {
   return projectId;
 }
 
-async function persistCompletedUpload(payload: Record<string, unknown>): Promise<void> {
-  const response = await fetch(`${requiredEnv("CONVEX_SITE_URL").replace(/\/$/, "")}/uploadthing-complete`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${requiredEnv("UPLOADTHING_CALLBACK_SECRET")}`,
-      "Content-Type": "application/json",
+async function persistCompletedUpload(
+  payload: Record<string, unknown>,
+): Promise<void> {
+  const response = await fetch(
+    `${requiredEnv("CONVEX_ACTIONS_URL").replace(/\/$/, "")}/uploadthing-complete`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${requiredEnv("UPLOADTHING_CALLBACK_SECRET")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  });
+  );
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
-    throw new Error(`The uploaded image could not be recorded in Convex (${response.status}): ${detail}`);
+    throw new Error(
+      `The uploaded image could not be recorded in Convex (${response.status}): ${detail}`,
+    );
   }
 }
 
 async function validateProjectExists(projectId: string): Promise<void> {
-  const response = await fetch(`${requiredEnv("CONVEX_SITE_URL").replace(/\/$/, "")}/uploadthing-project`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${requiredEnv("UPLOADTHING_CALLBACK_SECRET")}`,
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${requiredEnv("CONVEX_ACTIONS_URL").replace(/\/$/, "")}/uploadthing-project`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${requiredEnv("UPLOADTHING_CALLBACK_SECRET")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ projectId }),
     },
-    body: JSON.stringify({ projectId }),
-  });
+  );
   if (!response.ok) {
     throw new UploadThingError("The selected project does not exist.");
   }
@@ -140,6 +170,8 @@ const uploadThingHandler = createRouteHandler({
   },
 });
 
-export async function handleUploadThingRequest(request: Request): Promise<Response> {
+export async function handleUploadThingRequest(
+  request: Request,
+): Promise<Response> {
   return uploadThingHandler(request);
 }

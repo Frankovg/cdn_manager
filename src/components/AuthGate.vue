@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { useAuth } from "@clerk/vue";
 import { useConvexClient } from "convex-vue";
+import { PUBLIC_CLERK_PUBLISHABLE_KEY } from "astro:env/client";
 import { useRoute } from "vue-router";
 import { onMounted, watch } from "vue";
 import { authState, setAuthState } from "@/services/auth-state";
@@ -31,11 +32,9 @@ import { attachClerkToken } from "@/services/convex";
 
 const route = useRoute();
 
-const clerkPublishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
-const convexUrl = import.meta.env.PUBLIC_CONVEX_URL?.trim();
-const convex = convexUrl ? useConvexClient() : null;
+const convex = useConvexClient();
 
-if (clerkPublishableKey) {
+if (PUBLIC_CLERK_PUBLISHABLE_KEY) {
   try {
     const { isLoaded, isSignedIn, userId, getToken } = useAuth();
     watch(
@@ -61,7 +60,7 @@ if (clerkPublishableKey) {
 }
 
 onMounted(() => {
-  if (!clerkPublishableKey) {
+  if (!PUBLIC_CLERK_PUBLISHABLE_KEY) {
     setAuthState({ isLoaded: true });
   }
 });

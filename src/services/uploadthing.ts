@@ -1,5 +1,6 @@
 import { generateVueHelpers } from '@uploadthing/vue'
 import type { AnyFileRoute } from 'uploadthing/types'
+import { PUBLIC_UPLOAD_ENDPOINT_URL } from 'astro:env/client'
 // Keep this shape local so the browser project never has to import the server router module.
 type UploadRouter = { imageUploader: AnyFileRoute }
 
@@ -8,5 +9,5 @@ type UploadRouter = { imageUploader: AnyFileRoute }
  * server token and Clerk secret can never be pulled into the Vite browser bundle.
  */
 export const { useUploadThing } = generateVueHelpers<UploadRouter>({
-  url: import.meta.env.PUBLIC_UPLOAD_ENDPOINT_URL?.trim() ?? '/api/upload',
+  url: PUBLIC_UPLOAD_ENDPOINT_URL ?? '/api/upload',
 })

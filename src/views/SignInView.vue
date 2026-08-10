@@ -22,7 +22,7 @@
       </div>
 
       <div class="flex justify-center">
-        <template v-if="!clerkPublishableKey">
+        <template v-if="!PUBLIC_CLERK_PUBLISHABLE_KEY">
           <div
             class="mb-5 grid size-10 place-items-center rounded-sm bg-blue/10 font-display text-xl text-blue"
           >
@@ -47,8 +47,7 @@
 
 <script setup lang="ts">
 import { SignIn } from "@clerk/vue";
-
-const clerkPublishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
+import { PUBLIC_CLERK_PUBLISHABLE_KEY } from "astro:env/client";
 
 const signInAppearance = {
   variables: {

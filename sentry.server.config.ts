@@ -1,9 +1,8 @@
 import * as Sentry from "@sentry/astro";
-
-const dsn = process.env.PUBLIC_SENTRY_DSN;
+import { SENTRY_DSN } from "astro:env/server";
 
 Sentry.init({
-  dsn,
-  environment: process.env.PUBLIC_SENTRY_ENVIRONMENT,
-  enabled: Boolean(dsn),
+  dsn: SENTRY_DSN,
+  environment: "",
+  enabled: Boolean(SENTRY_DSN),
 });

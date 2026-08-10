@@ -5,17 +5,14 @@ import {
   type FileRouter,
 } from "uploadthing/server";
 import {
+  CONVEX_ACTIONS_URL,
+  UPLOADTHING_CALLBACK_SECRET,
+  UPLOADTHING_TOKEN,
+} from "astro:env/server";
+import {
   validateImageFile,
   validatePublicUploadThingUrl,
 } from "../../convex/validation.js";
-
-function requiredEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Required server environment variable is missing: ${name}`);
-  }
-  return value;
-}
 
 const f = createUploadthing();
 
@@ -30,7 +27,7 @@ async function authenticateUploadRequest(request: Request): Promise<{
   }
   try {
     const response = await fetch(
-      `${requiredEnv("CONVEX_ACTIONS_URL").replace(/\/$/, "")}/uploadthing-auth`,
+      `${CONVEX_ACTIONS_URL}/uploadthing-auth`,
       {
         headers: { Authorization: authorization },
       },
@@ -83,11 +80,11 @@ async function persistCompletedUpload(
   payload: Record<string, unknown>,
 ): Promise<void> {
   const response = await fetch(
-    `${requiredEnv("CONVEX_ACTIONS_URL").replace(/\/$/, "")}/uploadthing-complete`,
+    `${CONVEX_ACTIONS_URL}/uploadthing-complete`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${requiredEnv("UPLOADTHING_CALLBACK_SECRET")}`,
+        Authorization: `Bearer ${UPLOADTHING_CALLBACK_SECRET}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
@@ -103,11 +100,11 @@ async function persistCompletedUpload(
 
 async function validateProjectExists(projectId: string): Promise<void> {
   const response = await fetch(
-    `${requiredEnv("CONVEX_ACTIONS_URL").replace(/\/$/, "")}/uploadthing-project`,
+    `${CONVEX_ACTIONS_URL}/uploadthing-project`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${requiredEnv("UPLOADTHING_CALLBACK_SECRET")}`,
+        Authorization: `Bearer ${UPLOADTHING_CALLBACK_SECRET}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ projectId }),
@@ -166,7 +163,7 @@ export type UploadRouter = typeof uploadRouter;
 const uploadThingHandler = createRouteHandler({
   router: uploadRouter,
   config: {
-    token: requiredEnv("UPLOADTHING_TOKEN"),
+    token: UPLOADTHING_TOKEN,
   },
 });
 

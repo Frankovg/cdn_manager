@@ -73,8 +73,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const convexUrl = import.meta.env.PUBLIC_CONVEX_URL?.trim();
-const convex = convexUrl ? useConvexClient() : null;
+const convex = useConvexClient();
 const loading = ref(true);
 const error = ref<string | null>(null);
 

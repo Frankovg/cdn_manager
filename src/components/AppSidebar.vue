@@ -79,41 +79,7 @@
         </p>
       </div>
 
-      <div class="grid gap-3 pt-8">
-        <template v-if="canManageProjects">
-          <p
-            class="m-0 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-slate-400"
-          >
-            nuevo proyecto
-          </p>
-          <form class="grid gap-2" @submit.prevent="submitProject">
-            <Input
-              v-model="newProjectName"
-              maxlength="120"
-              placeholder="Nombre del proyecto"
-              :disabled="creatingProject"
-            />
-            <Button
-              class="w-full"
-              type="submit"
-              :disabled="!newProjectName.trim() || creatingProject"
-            >
-              {{ creatingProject ? "Creando…" : "Crear proyecto" }}
-            </Button>
-          </form>
-        </template>
-        <p
-          v-if="projectsError || createError"
-          class="m-0 text-[0.7rem] leading-relaxed text-[#ff9b87]"
-          role="alert"
-        >
-          {{ projectsError || createError }}
-        </p>
-      </div>
-
-      <div class="flex min-h-0 flex-1 flex-col gap-3 pt-8">
-        <Separator />
-
+      <div class="flex min-h-0 flex-1 flex-col gap-3 pt-5">
         <div class="flex items-center justify-between">
           <p
             class="m-0 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-slate-400"
@@ -134,7 +100,7 @@
           <Input
             v-model="projectSearch"
             type="search"
-            class="pl-9"
+            class="pl-9 bg-white/5 text-white placeholder:text-slate-400 border-blue/50"
             placeholder="Buscar proyectos…"
             aria-label="Buscar proyectos"
           />
@@ -175,18 +141,61 @@
           </div>
         </ScrollArea>
       </div>
+
+      <div class="grid gap-3 border-t border-slate-400/50 pt-4">
+        <template v-if="canManageProjects">
+          <form class="gap-2 flex" @submit.prevent="submitProject">
+            <Input
+              v-model="newProjectName"
+              maxlength="120"
+              placeholder="Nuevo proyecto"
+              :disabled="creatingProject"
+              class="bg-white/5 text-white placeholder:text-slate-400 border-blue/50"
+            />
+            <Button
+              class="w-fit"
+              type="submit"
+              :disabled="!newProjectName.trim() || creatingProject"
+            >
+              <template v-if="creatingProject">
+                <LoaderCircleIcon
+                  :size="16"
+                  :stroke-width="1.8"
+                  class="animate-spin"
+                />
+              </template>
+              <template v-else>
+                <PlusIcon :size="16" :stroke-width="1.8" />
+              </template>
+            </Button>
+          </form>
+        </template>
+        <p
+          v-if="projectsError || createError"
+          class="m-0 text-[0.7rem] leading-relaxed text-[#ff9b87]"
+          role="alert"
+        >
+          {{ projectsError || createError }}
+        </p>
+      </div>
     </div>
   </Sidebar>
 </template>
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
-import { PencilIcon, SaveIcon, SearchIcon, XIcon } from "lucide-vue-next";
+import {
+  PencilIcon,
+  SaveIcon,
+  SearchIcon,
+  XIcon,
+  PlusIcon,
+  LoaderCircleIcon,
+} from "lucide-vue-next";
 import type { Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { Sidebar } from "@/components/ui/sidebar";
 import { useProjectsContext } from "@/composables/useProjectsContext";
 

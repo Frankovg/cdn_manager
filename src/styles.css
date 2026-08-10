@@ -236,12 +236,6 @@
     opacity: 0.6;
   }
 
-  .ui-separator {
-    width: 100%;
-    height: 1px;
-    background: var(--color-line);
-  }
-
   .ui-scroll-area {
     min-height: 0;
     overflow-y: auto;

@@ -28,4 +28,4 @@ COPY .env.production .env
 
 ENV HOST=0.0.0.0
 
-CMD ["node", "dist/server/entry.mjs"]
+CMD ["node", "--env-file", ".env", "dist/server/entry.mjs"]

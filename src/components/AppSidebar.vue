@@ -105,7 +105,7 @@
             aria-label="Buscar proyectos"
           />
         </div>
-        <ScrollArea class="min-h-0 flex-1 pr-1">
+        <ScrollArea class="min-h-0 flex-1 pr-1 pb-2">
           <div v-if="projectsLoading" class="py-4 text-xs text-slate-400">
             Cargando proyectos…
           </div>

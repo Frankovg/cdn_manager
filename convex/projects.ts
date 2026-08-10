@@ -7,7 +7,12 @@ export const list = query({
   args: {},
   handler: async (ctx) => {
     await requireAuthenticatedUser(ctx);
-    return ctx.db.query("projects").collect();
+    const projects = await ctx.db.query("projects").collect();
+    return projects.sort((firstProject, secondProject) =>
+      firstProject.name.localeCompare(secondProject.name, "es", {
+        sensitivity: "base",
+      }),
+    );
   },
 });
 

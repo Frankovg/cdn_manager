@@ -1,10 +1,11 @@
 export const MAX_IMAGE_SIZE_BYTES = 4 * 1024 * 1024
-export const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png'] as const
+export const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const
 
 const fileKeyPattern = /^[A-Za-z0-9._-]+$/
 const extensionByMimeType: Record<(typeof ACCEPTED_IMAGE_MIME_TYPES)[number], readonly string[]> = {
   'image/jpeg': ['.jpg', '.jpeg'],
   'image/png': ['.png'],
+  'image/webp': ['.webp'],
 }
 
 function domainError(message: string): never {
@@ -24,7 +25,7 @@ export function validateImageFile(filename: string, mimeType: string, sizeBytes:
   const normalizedFilename = filename.trim().toLowerCase()
 
   if (!extensions || !extensions.some((extension) => normalizedFilename.endsWith(extension))) {
-    domainError('Only JPG, JPEG, and PNG images are accepted.')
+    domainError('Only JPG, JPEG, PNG, and WebP images are accepted.')
   }
   if (!Number.isSafeInteger(sizeBytes) || sizeBytes <= 0 || sizeBytes > MAX_IMAGE_SIZE_BYTES) {
     domainError('The file must be at most 4 MB.')

@@ -2,15 +2,16 @@ import { describe, expect, it } from 'vitest'
 import { MAX_IMAGE_SIZE_BYTES, validateImageFile } from '../src/services/upload-validation'
 
 describe('immediate file validation', () => {
-  it('accepts valid JPG, JPEG, and PNG files', () => {
+  it('accepts valid JPG, JPEG, PNG, and WebP files', () => {
     expect(() => validateImageFile('photo.jpg', 'image/jpeg', 1)).not.toThrow()
     expect(() => validateImageFile('photo.JPEG', 'image/jpeg', 1)).not.toThrow()
     expect(() => validateImageFile('photo.png', 'image/png', MAX_IMAGE_SIZE_BYTES)).not.toThrow()
+    expect(() => validateImageFile('photo.webp', 'image/webp', 1)).not.toThrow()
   })
 
   it('rejects mismatched extensions or MIME types', () => {
-    expect(() => validateImageFile('photo.gif', 'image/gif', 1)).toThrow('Only JPG, JPEG, and PNG')
-    expect(() => validateImageFile('photo.png', 'image/jpeg', 1)).toThrow('Only JPG, JPEG, and PNG')
+    expect(() => validateImageFile('photo.gif', 'image/gif', 1)).toThrow('Only JPG, JPEG, PNG, and WebP')
+    expect(() => validateImageFile('photo.png', 'image/jpeg', 1)).toThrow('Only JPG, JPEG, PNG, and WebP')
   })
 
   it('rejects empty files or files larger than 4 MB', () => {

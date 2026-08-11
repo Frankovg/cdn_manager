@@ -91,6 +91,11 @@ export const uploadRouter = {
       acl: 'public-read',
       contentDisposition: 'inline',
     },
+    'image/webp': {
+      maxFileSize: '4MB',
+      acl: 'public-read',
+      contentDisposition: 'inline',
+    },
   })
     .middleware(async ({ req, files }) => {
       const user = await authenticateUploadRequest(req)

@@ -3,7 +3,7 @@ import type { ConvexClient } from 'convex/browser'
 import type { LocationQuery, RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import type { Id } from '../../convex/_generated/dataModel'
 import { toast } from 'vue-sonner'
-import { createProject, getProjects, getProjectsManagementPermission, renameProject, type Project } from '@/services/convex'
+import { createProject, getProjectsManagementPermission, renameProject, subscribeProjects, type Project } from '@/services/convex'
 
 export function readProjectId(query: LocationQuery): Id<'projects'> | '' {
   const raw = query.project
@@ -52,6 +52,16 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
   const createError = ref<string | null>(null)
   const renamingProject = ref(false)
   const renameError = ref<string | null>(null)
+  let unsubscribeProjects: (() => void) | null = null
+
+  function stopProjectsSubscription(): void {
+    if (!unsubscribeProjects) {
+      return
+    }
+    const unsubscribe = unsubscribeProjects
+    unsubscribeProjects = null
+    unsubscribe()
+  }
 
   const selectedProject = computed(() => projects.value.find((project) => project._id === selectedProjectId.value) ?? null)
 
@@ -82,13 +92,30 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
 
     projectsLoading.value = true
     projectsError.value = null
+    stopProjectsSubscription()
 
     try {
-      const [loadedProjects, permission] = await Promise.all([getProjects(convex), getProjectsManagementPermission(convex)])
-      projects.value = loadedProjects
+      let hasReceivedProjects = false
+      const projectsReady = new Promise<void>((resolve, reject) => {
+        const subscription = subscribeProjects(
+          convex,
+          (loadedProjects) => {
+            projects.value = loadedProjects
+            if (!hasReceivedProjects) {
+              hasReceivedProjects = true
+              selectedProjectId.value = resolveProjectId(loadedProjects, route.query)
+              resolve()
+            }
+          },
+          reject,
+        )
+        unsubscribeProjects = () => subscription()
+      })
+      const permission = await getProjectsManagementPermission(convex)
+      await projectsReady
       canManageProjects.value = permission
-      selectedProjectId.value = resolveProjectId(loadedProjects, route.query)
     } catch (reason) {
+      stopProjectsSubscription()
       projectsError.value = getErrorMessage(reason, 'No se pudo cargar la biblioteca.')
       throw reason
     } finally {
@@ -108,14 +135,17 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
 
     creatingProject.value = true
     createError.value = null
+    const optimisticProjectId = `optimistic-project-${Date.now()}-${Math.random()}` as Id<'projects'>
+    selectedProjectId.value = optimisticProjectId
 
     try {
-      const id = await createProject(convex, name)
-      await loadProjects()
+      const id = await createProject(convex, name, optimisticProjectId)
       selectedProjectId.value = id
       toast.success('Proyecto creado', { duration: 2500 })
     } catch (reason) {
       createError.value = getErrorMessage(reason, 'No se pudo crear el proyecto.')
+      projects.value = projects.value.filter((project) => project._id !== optimisticProjectId)
+      selectedProjectId.value = projects.value[0]?._id ?? ''
       toast.error(createError.value, { duration: 3500 })
     } finally {
       creatingProject.value = false
@@ -149,7 +179,7 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
   watch(
     () => route.query.project,
     () => {
-      if (!projects.value.length) {
+      if (!projects.value.length || creatingProject.value) {
         return
       }
       const resolved = resolveProjectId(projects.value, route.query)

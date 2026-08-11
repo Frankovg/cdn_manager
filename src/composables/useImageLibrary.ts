@@ -18,25 +18,42 @@ function getErrorMessage(reason: unknown, fallback: string): string {
   return reason instanceof Error ? reason.message : fallback
 }
 
+function isOptimisticProjectId(projectId: Id<'projects'> | ''): boolean {
+  return projectId.startsWith('optimistic-project-')
+}
+
 export function useImageLibrary(convex: ConvexClient | null, selectedProjectId: Ref<Id<'projects'> | ''>): ImageLibrary {
   const images = ref<ImageRecord[]>([])
   const imagesLoading = ref(false)
   const imagesError = ref<string | null>(null)
 
+  function resetImages(): void {
+    images.value = []
+    imagesLoading.value = false
+    imagesError.value = null
+  }
+
   async function loadImages(): Promise<void> {
-    if (!convex || !selectedProjectId.value) {
-      images.value = []
-      imagesError.value = null
+    const projectId = selectedProjectId.value
+    if (!convex || !projectId || isOptimisticProjectId(projectId)) {
+      resetImages()
       return
     }
     imagesLoading.value = true
     imagesError.value = null
     try {
-      images.value = await getImages(convex, selectedProjectId.value)
+      const loadedImages = await getImages(convex, projectId)
+      if (selectedProjectId.value === projectId) {
+        images.value = loadedImages
+      }
     } catch (reason) {
-      imagesError.value = getErrorMessage(reason, 'No se pudieron cargar las imágenes.')
+      if (selectedProjectId.value === projectId) {
+        imagesError.value = getErrorMessage(reason, 'No se pudieron cargar las imágenes.')
+      }
     } finally {
-      imagesLoading.value = false
+      if (selectedProjectId.value === projectId) {
+        imagesLoading.value = false
+      }
     }
   }
 
@@ -108,7 +125,11 @@ export function useImageLibrary(convex: ConvexClient | null, selectedProjectId: 
     }
   }
 
-  watch(selectedProjectId, () => {
+  watch(selectedProjectId, (projectId, previousProjectId) => {
+    if (isOptimisticProjectId(previousProjectId) && projectId && !isOptimisticProjectId(projectId)) {
+      resetImages()
+      return
+    }
     void loadImages()
   })
 

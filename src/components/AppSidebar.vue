@@ -71,8 +71,7 @@
           />
         </div>
         <ScrollArea class="min-h-0 flex-1 pr-1 pb-2">
-          <div v-if="projectsLoading" class="py-4 text-xs text-slate-400">Cargando proyectos…</div>
-          <div v-else-if="!filteredProjects.length" class="py-4 text-xs text-slate-400">
+          <div v-if="!filteredProjects.length" class="py-4 text-xs text-slate-400">
             {{ projectSearch ? 'No hay coincidencias.' : 'Todavía no hay proyectos.' }}
           </div>
           <div v-else class="grid gap-1">
@@ -84,6 +83,7 @@
                 'border-sky-800 bg-sky-500/40 text-white': project._id === selectedProjectId,
               }"
               type="button"
+              :ref="(element) => setProjectLink(project._id, element)"
               @click="selectProject(project._id)"
             >
               <span class="size-1.5 shrink-0 rounded-full bg-slate-500" :class="{ 'bg-coral': project._id === selectedProjectId }" aria-hidden="true" />
@@ -104,12 +104,7 @@
               class="bg-white/5 text-white placeholder:text-slate-400 border-blue/50"
             />
             <Button class="w-fit" type="submit" :disabled="!newProjectName.trim() || creatingProject">
-              <template v-if="creatingProject">
-                <LoaderCircleIcon :size="16" :stroke-width="1.8" class="animate-spin" />
-              </template>
-              <template v-else>
-                <PlusIcon :size="16" :stroke-width="1.8" />
-              </template>
+              <PlusIcon :size="16" :stroke-width="1.8" />
             </Button>
           </form>
         </template>
@@ -123,7 +118,8 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
-import { PencilIcon, SaveIcon, SearchIcon, XIcon, PlusIcon, LoaderCircleIcon } from 'lucide-vue-next'
+import type { ComponentPublicInstance } from 'vue'
+import { PencilIcon, SaveIcon, SearchIcon, XIcon, PlusIcon } from 'lucide-vue-next'
 import type { Id } from '../../convex/_generated/dataModel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -143,7 +139,6 @@ const {
   projects,
   selectedProjectId,
   selectedProject,
-  projectsLoading,
   canManageProjects,
   creatingProject,
   renamingProject,
@@ -185,6 +180,31 @@ watch(
   },
 )
 
+const projectLinks = new Map<Id<'projects'>, HTMLButtonElement>()
+const projectToReveal = ref<Id<'projects'> | ''>('')
+
+watch(
+  [filteredProjects, projectToReveal],
+  async () => {
+    const projectId = projectToReveal.value
+    if (!projectId) {
+      return
+    }
+
+    await nextTick()
+    projectLinks.get(projectId)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  },
+  { flush: 'post' },
+)
+
+function setProjectLink(projectId: Id<'projects'>, element: Element | ComponentPublicInstance | null): void {
+  if (element instanceof HTMLButtonElement) {
+    projectLinks.set(projectId, element)
+    return
+  }
+  projectLinks.delete(projectId)
+}
+
 function selectProject(projectId: Id<'projects'>): void {
   selectProjectFromContext(projectId)
   emit('close')
@@ -192,13 +212,21 @@ function selectProject(projectId: Id<'projects'>): void {
 
 const newProjectName = ref('')
 
-function submitProject(): void {
+async function submitProject(): Promise<void> {
   const name = newProjectName.value.trim()
   if (!name || creatingProject.value) {
     return
   }
-  void createProject(name)
+
+  const creation = createProject(name)
+  projectToReveal.value = selectedProjectId.value
   newProjectName.value = ''
+
+  try {
+    await creation
+  } finally {
+    projectToReveal.value = ''
+  }
 }
 
 const renameInput = ref<{ $el?: HTMLElement } | null>(null)

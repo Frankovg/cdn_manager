@@ -61,8 +61,30 @@ export async function getProjects(client: ConvexClient): Promise<Project[]> {
   return client.query(anyApi.projects.list, {}) as Promise<Project[]>
 }
 
-export async function createProject(client: ConvexClient, name: string): Promise<Id<'projects'>> {
-  return client.mutation(anyApi.projects.create, { name }) as Promise<Id<'projects'>>
+export function subscribeProjects(client: ConvexClient, onUpdate: (projects: Project[]) => void, onError: (reason: Error) => void): () => void {
+  const subscription = client.onUpdate(anyApi.projects.list, {}, onUpdate, onError)
+  return () => subscription()
+}
+
+export async function createProject(client: ConvexClient, name: string, optimisticProjectId: Id<'projects'>): Promise<Id<'projects'>> {
+  return client.mutation(
+    anyApi.projects.create,
+    { name },
+    {
+      optimisticUpdate: (localStore) => {
+        const current = localStore.getQuery(anyApi.projects.list, {}) ?? []
+        const now = Date.now()
+        const optimisticProject: Project = {
+          _id: optimisticProjectId,
+          name,
+          createdAt: now,
+          updatedAt: now,
+          createdBy: 'optimistic',
+        }
+        localStore.setQuery(anyApi.projects.list, {}, [...current, optimisticProject])
+      },
+    },
+  ) as Promise<Id<'projects'>>
 }
 
 export async function getProjectsManagementPermission(client: ConvexClient): Promise<boolean> {

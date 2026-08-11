@@ -1,14 +1,14 @@
 <script setup lang="ts">
-defineOptions({ inheritAttrs: false });
+defineOptions({ inheritAttrs: false })
 
 defineProps<{
-  modelValue?: string;
-  type?: string;
-  disabled?: boolean;
-  placeholder?: string;
-}>();
+  modelValue?: string
+  type?: string
+  disabled?: boolean
+  placeholder?: string
+}>()
 
-const emit = defineEmits<{ "update:modelValue": [value: string] }>();
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
 </script>
 
 <template>

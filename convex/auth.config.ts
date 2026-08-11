@@ -1,4 +1,4 @@
-import type { AuthConfig } from "convex/server";
+import type { AuthConfig } from 'convex/server'
 
 /**
  * Convex validates Clerk JWTs with the issuer configured on the deployment.
@@ -9,7 +9,7 @@ export default {
   providers: [
     {
       domain: process.env.CLERK_JWT_ISSUER_DOMAIN!,
-      applicationID: "convex",
+      applicationID: 'convex',
     },
   ],
-} satisfies AuthConfig;
+} satisfies AuthConfig

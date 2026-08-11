@@ -34,10 +34,7 @@ export interface ImageRecord {
   description?: string
 }
 
-type ClerkConvexGetToken = (options: {
-  template: 'convex'
-  skipCache: boolean
-}) => Promise<string | null>
+type ClerkConvexGetToken = (options: { template: 'convex'; skipCache: boolean }) => Promise<string | null>
 
 /**
  * Attach the Clerk JWT template to Convex. When Convex asks for a forced refresh
@@ -87,11 +84,6 @@ export async function recordUploadedImage(
   return client.mutation(anyApi.images.recordUploadedImage, image) as Promise<Id<'images'>>
 }
 
-export async function updateImageMetadata(
-  client: ConvexClient,
-  imageId: Id<'images'>,
-  title: string,
-  description?: string,
-): Promise<void> {
+export async function updateImageMetadata(client: ConvexClient, imageId: Id<'images'>, title: string, description?: string): Promise<void> {
   await client.mutation(anyApi.images.updateMetadata, { imageId, title, description })
 }

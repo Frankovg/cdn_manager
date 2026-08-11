@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { DialogDescriptionProps } from "reka-ui"
-import type { HTMLAttributes } from "vue"
-import { DialogDescription, useForwardProps } from "reka-ui"
-import { cn } from "@/lib/utils"
+import type { DialogDescriptionProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { DialogDescription, useForwardProps } from 'reka-ui'
+import { cn } from '@/lib/utils'
 
-const props = defineProps<DialogDescriptionProps & { class?: HTMLAttributes["class"] }>()
+const props = defineProps<DialogDescriptionProps & { class?: HTMLAttributes['class'] }>()
 const forwarded = useForwardProps(props)
 </script>
 

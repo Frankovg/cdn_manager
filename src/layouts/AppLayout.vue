@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import AppNav from "@/components/AppNav.vue";
-import AppSidebar from "@/components/AppSidebar.vue";
+import { ref } from 'vue'
+import AppNav from '@/components/AppNav.vue'
+import AppSidebar from '@/components/AppSidebar.vue'
 
-const sidebarOpen = ref(false);
+const sidebarOpen = ref(false)
 </script>

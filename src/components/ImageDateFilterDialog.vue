@@ -1,12 +1,7 @@
 <template>
   <Dialog v-model:open="open">
     <DialogTrigger as-child>
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        class="h-10 min-h-10 text-muted hover:text-primary"
-      >
+      <Button type="button" variant="outline" size="sm" class="h-10 min-h-10 text-muted hover:text-primary">
         <CalendarIcon :size="14" :stroke-width="1.8" />
         Fecha
       </Button>
@@ -17,69 +12,45 @@
     >
       <DialogHeader class="pr-0">
         <DialogTitle>Fecha de subida</DialogTitle>
-        <DialogDescription>
-          Elige el rango para filtrar las imágenes.
-        </DialogDescription>
+        <DialogDescription>Elige el rango para filtrar las imágenes.</DialogDescription>
       </DialogHeader>
       <div class="min-h-0 flex-1 overflow-auto">
-        <RangeCalendar
-          v-model="draftDateRange"
-          class="w-full sm:mx-auto sm:w-fit"
-          locale="es"
-          :number-of-months="2"
-          disable-days-outside-current-view
-        />
+        <RangeCalendar v-model="draftDateRange" class="w-full sm:mx-auto sm:w-fit" locale="es" :number-of-months="2" disable-days-outside-current-view />
       </div>
       <DialogFooter class="mt-auto rounded-none sm:rounded-b-xl">
-        <Button type="button" variant="outline" @click="open = false">
-          Cerrar
-        </Button>
-        <Button
-          type="button"
-          :disabled="!canAcceptDateRange"
-          @click="acceptDateRange"
-        >
-          Aceptar
-        </Button>
+        <Button type="button" variant="outline" @click="open = false">Cerrar</Button>
+        <Button type="button" :disabled="!canAcceptDateRange" @click="acceptDateRange">Aceptar</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, type Ref } from "vue";
-import type { DateRange } from "reka-ui";
-import { CalendarIcon } from "lucide-vue-next";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { RangeCalendar } from "@/components/ui/range-calendar";
+import { computed, ref, watch, type Ref } from 'vue'
+import type { DateRange } from 'reka-ui'
+import { CalendarIcon } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { RangeCalendar } from '@/components/ui/range-calendar'
 
 const props = defineProps<{
-  open: boolean;
-  dateRange: DateRange;
-}>();
+  open: boolean
+  dateRange: DateRange
+}>()
 
 const emit = defineEmits<{
-  "update:open": [open: boolean];
-  apply: [range: DateRange];
-}>();
+  'update:open': [open: boolean]
+  apply: [range: DateRange]
+}>()
 
 const open = computed({
   get: () => props.open,
-  set: (value) => emit("update:open", value),
-});
-const draftDateRange = ref(emptyDateRange()) as Ref<DateRange>;
+  set: (value) => emit('update:open', value),
+})
+const draftDateRange = ref(emptyDateRange()) as Ref<DateRange>
 const canAcceptDateRange = computed(() => {
-  return Boolean(draftDateRange.value.start && draftDateRange.value.end);
-});
+  return Boolean(draftDateRange.value.start && draftDateRange.value.end)
+})
 
 watch(
   () => props.open,
@@ -88,23 +59,23 @@ watch(
       draftDateRange.value = {
         start: props.dateRange.start,
         end: props.dateRange.end,
-      };
+      }
     }
   },
-);
+)
 
 function emptyDateRange(): DateRange {
-  return { start: undefined, end: undefined };
+  return { start: undefined, end: undefined }
 }
 
 function acceptDateRange(): void {
   if (!canAcceptDateRange.value) {
-    return;
+    return
   }
-  emit("apply", {
+  emit('apply', {
     start: draftDateRange.value.start,
     end: draftDateRange.value.end,
-  });
-  open.value = false;
+  })
+  open.value = false
 }
 </script>

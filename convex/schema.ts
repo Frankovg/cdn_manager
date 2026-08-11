@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
 
 export default defineSchema({
   projects: defineTable({
@@ -9,7 +9,7 @@ export default defineSchema({
     createdBy: v.string(),
   }),
   images: defineTable({
-    projectId: v.id("projects"),
+    projectId: v.id('projects'),
     publicUrl: v.string(),
     fileKey: v.string(),
     uploadedByClerkId: v.string(),
@@ -22,7 +22,7 @@ export default defineSchema({
     title: v.string(),
     description: v.optional(v.string()),
   })
-    .index("by_project", ["projectId"])
-    .index("by_project_uploaded_at", ["projectId", "uploadedAt"])
-    .index("by_file_key", ["fileKey"]),
-});
+    .index('by_project', ['projectId'])
+    .index('by_project_uploaded_at', ['projectId', 'uploadedAt'])
+    .index('by_file_key', ['fileKey']),
+})

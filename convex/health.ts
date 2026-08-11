@@ -1,4 +1,4 @@
-import { query } from "./_generated/server";
+import { query } from './_generated/server'
 
 /**
  * Authenticated connectivity check used by the private Vue smoke-test page.
@@ -8,10 +8,10 @@ import { query } from "./_generated/server";
 export const authenticated = query({
   args: {},
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const identity = await ctx.auth.getUserIdentity()
 
     if (identity === null) {
-      throw new Error("You are not authenticated.");
+      throw new Error('You are not authenticated.')
     }
 
     return {
@@ -21,6 +21,6 @@ export const authenticated = query({
       issuer: identity.issuer,
       name: identity.name ?? null,
       email: identity.email ?? null,
-    };
+    }
   },
-});
+})

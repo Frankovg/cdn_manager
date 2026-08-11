@@ -1,8 +1,8 @@
-import * as Sentry from "@sentry/astro";
-import { SENTRY_DSN } from "astro:env/server";
+import * as Sentry from '@sentry/astro'
+import { SENTRY_DSN } from 'astro:env/server'
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  environment: "",
+  environment: '',
   enabled: Boolean(SENTRY_DSN),
-});
+})

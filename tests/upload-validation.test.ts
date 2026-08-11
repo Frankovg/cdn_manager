@@ -15,8 +15,6 @@ describe('immediate file validation', () => {
 
   it('rejects empty files or files larger than 4 MB', () => {
     expect(() => validateImageFile('photo.jpg', 'image/jpeg', 0)).toThrow('at most 4 MB')
-    expect(() => validateImageFile('photo.jpg', 'image/jpeg', MAX_IMAGE_SIZE_BYTES + 1)).toThrow(
-      'at most 4 MB',
-    )
+    expect(() => validateImageFile('photo.jpg', 'image/jpeg', MAX_IMAGE_SIZE_BYTES + 1)).toThrow('at most 4 MB')
   })
 })

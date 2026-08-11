@@ -34,10 +34,8 @@ if (PUBLIC_CLERK_PUBLISHABLE_KEY) {
         })
       },
       { immediate: true },
-    )
-    if (convex) {
-      attachClerkToken(convex, (options) => getToken.value(options))
-    }
+    );
+    attachClerkToken(convex, (options) => getToken.value(options));
   } catch {
     // The app can still render its setup guide when Clerk has not been configured.
     setAuthState({ isLoaded: true, isSignedIn: false })

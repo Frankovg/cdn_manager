@@ -22,7 +22,7 @@ function isOptimisticProjectId(projectId: Id<'projects'> | ''): boolean {
   return projectId.startsWith('optimistic-project-')
 }
 
-export function useImageLibrary(convex: ConvexClient | null, selectedProjectId: Ref<Id<'projects'> | ''>): ImageLibrary {
+export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<'projects'> | ''>): ImageLibrary {
   const images = ref<ImageRecord[]>([])
   const imagesLoading = ref(false)
   const imagesError = ref<string | null>(null)
@@ -35,7 +35,7 @@ export function useImageLibrary(convex: ConvexClient | null, selectedProjectId: 
 
   async function loadImages(): Promise<void> {
     const projectId = selectedProjectId.value
-    if (!convex || !projectId || isOptimisticProjectId(projectId)) {
+    if (!projectId || isOptimisticProjectId(projectId)) {
       resetImages()
       return
     }
@@ -58,7 +58,7 @@ export function useImageLibrary(convex: ConvexClient | null, selectedProjectId: 
   }
 
   async function handleUploaded(uploaded: UploadedFile[]): Promise<void> {
-    if (!convex || !selectedProjectId.value) {
+    if (!selectedProjectId.value) {
       return
     }
     const failed: string[] = []
@@ -107,9 +107,6 @@ export function useImageLibrary(convex: ConvexClient | null, selectedProjectId: 
   }
 
   async function saveImage(image: ImageRecord, title: string, description?: string): Promise<void> {
-    if (!convex) {
-      return
-    }
     try {
       await updateImageMetadata(convex, image._id, title, description)
       const current = images.value.find((item) => item._id === image._id)

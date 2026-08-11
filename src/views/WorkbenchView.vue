@@ -71,11 +71,6 @@ const { images, imagesLoading, imagesError, handleUploaded, saveImage } = imageL
 const health = ref<AuthenticatedHealth | null>(null)
 
 async function load(): Promise<void> {
-  if (!convex) {
-    error.value = 'Añade PUBLIC_CONVEX_URL para conectar con Convex.'
-    loading.value = false
-    return
-  }
   try {
     health.value = await getAuthenticatedHealth(convex)
     await loadProjects()

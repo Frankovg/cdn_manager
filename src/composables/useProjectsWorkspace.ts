@@ -42,7 +42,7 @@ function getErrorMessage(reason: unknown, fallback: string): string {
   return reason instanceof Error ? reason.message : fallback
 }
 
-export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLocationNormalizedLoaded, router: Router): ProjectsWorkspace {
+export function useProjectsWorkspace(convex: ConvexClient, route: RouteLocationNormalizedLoaded, router: Router): ProjectsWorkspace {
   const projects = ref<Project[]>([])
   const projectsLoading = ref(false)
   const projectsError = ref<string | null>(null)
@@ -86,10 +86,6 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
   }
 
   async function loadProjects(): Promise<void> {
-    if (!convex) {
-      return
-    }
-
     projectsLoading.value = true
     projectsError.value = null
     stopProjectsSubscription()
@@ -129,7 +125,7 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
   }
 
   async function submitProject(name: string): Promise<void> {
-    if (!convex || !name.trim() || creatingProject.value) {
+    if (!name.trim() || creatingProject.value) {
       return
     }
 
@@ -153,7 +149,7 @@ export function useProjectsWorkspace(convex: ConvexClient | null, route: RouteLo
   }
 
   async function renameSelectedProject(name: string): Promise<void> {
-    if (!convex || !selectedProjectId.value || !name.trim() || renamingProject.value) {
+    if (!selectedProjectId.value || !name.trim() || renamingProject.value) {
       return
     }
 

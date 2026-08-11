@@ -42,16 +42,7 @@
     </div>
 
     <div v-if="files.length" class="mt-5 flex flex-wrap items-center justify-end gap-3">
-      <Button
-        v-if="readyFiles.length || isUploading"
-        class="disabled:pointer-events-none disabled:opacity-50"
-        type="button"
-        :disabled="!readyFiles.length || isUploading"
-        @click="upload"
-      >
-        {{ isUploading ? `Subiendo ${Math.round(progress)}%…` : 'Subir selección' }}
-      </Button>
-      <Button v-if="files.length && !isUploading" variant="ghost" type="button" @click="clear">Limpiar selección</Button>
+      <Button v-if="files.length && !isUploading" variant="outline" type="button" @click="clear">Limpiar selección</Button>
     </div>
   </section>
 </template>
@@ -73,9 +64,6 @@ interface UploadItem {
   error?: string
 }
 
-const props = defineProps<{ projectId: string }>()
-const emit = defineEmits<{ uploaded: [files: UploadedFile[]] }>()
-
 export interface UploadedFile {
   name: string
   ufsUrl: string
@@ -84,9 +72,13 @@ export interface UploadedFile {
   mimeType: string
 }
 
+const props = defineProps<{ projectId: string }>()
+const emit = defineEmits<{ uploaded: [files: UploadedFile[]] }>()
+
 const files = ref<UploadItem[]>([])
 const progress = ref(0)
 const { getToken } = useAuth()
+
 const { startUpload } = useUploadThing('imageUploader', {
   uploadProgressGranularity: 'fine',
   headers: async () => {
@@ -136,6 +128,7 @@ function addFiles(incoming: File[]): void {
       duration: 3500,
     })
   }
+  void upload()
 }
 
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -169,10 +162,13 @@ function retry(item: UploadItem): void {
   item.error = error ?? undefined
   item.status = error ? 'error' : 'pending'
   item.progress = 0
+  if (!error) {
+    void upload()
+  }
 }
 
 const isUploading = ref(false)
-const readyFiles = computed(() => files.value.filter((item) => item.status === 'pending' || item.status === 'error'))
+const readyFiles = computed(() => files.value.filter((item) => item.status === 'pending'))
 
 async function upload(): Promise<void> {
   if (!readyFiles.value.length || isUploading.value) {
@@ -232,6 +228,9 @@ async function upload(): Promise<void> {
     })
   } finally {
     isUploading.value = false
+    if (readyFiles.value.length) {
+      void upload()
+    }
   }
 }
 

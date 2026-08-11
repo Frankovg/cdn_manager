@@ -7,12 +7,16 @@
         :aria-label="`Ver detalles de ${image.title}`"
         @click="emit('open', image)"
       >
+        <div v-if="isLoadingPreview" class="absolute inset-0 flex items-center justify-center">
+          <LoaderCircleIcon :size="24" :stroke-width="1.8" class="animate-spin text-slate-500" />
+        </div>
         <img
-          class="size-full object-cover transition duration-300 group-hover:scale-[1.02]"
+          :class="cn('size-full object-cover transition duration-300 group-hover:scale-[1.02]', { 'opacity-0': isLoadingPreview || failedPreview })"
           :src="image.publicUrl"
           :alt="image.title"
           loading="lazy"
-          @error="failedPreview = true"
+          @load="isLoadingPreview = false"
+          @error="handlePreviewError"
         />
       </button>
       <div v-if="failedPreview" class="absolute inset-0 grid place-items-center p-4 text-center text-xs text-muted">No se pudo previsualizar</div>
@@ -46,9 +50,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CopyIcon } from 'lucide-vue-next'
+import { CopyIcon, LoaderCircleIcon } from 'lucide-vue-next'
 import type { ImageRecord } from '@/services/convex'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 defineProps<{
   image: ImageRecord
@@ -61,6 +66,12 @@ const emit = defineEmits<{
 }>()
 
 const failedPreview = ref(false)
+const isLoadingPreview = ref(true)
+
+function handlePreviewError() {
+  failedPreview.value = true
+  isLoadingPreview.value = false
+}
 
 function formatSize(size: number): string {
   return `${(size / 1024 / 1024).toFixed(size >= 1024 * 1024 ? 1 : 2)} MB`

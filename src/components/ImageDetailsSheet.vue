@@ -152,6 +152,6 @@ function formatSize(size: number): string {
   return `${(size / 1024 / 1024).toFixed(size >= 1024 * 1024 ? 1 : 2)} MB`
 }
 function formatDate(timestamp: number): string {
-  return new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(timestamp)
+  return new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(timestamp)
 }
 </script>

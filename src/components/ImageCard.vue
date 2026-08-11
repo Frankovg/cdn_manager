@@ -2,10 +2,10 @@
   <article class="group overflow-hidden border border-line bg-surface">
     <div class="relative aspect-square bg-zinc-100">
       <button
-        class="absolute inset-0 z-0 block size-full text-left focus-visible:outline-none"
+        class="group/image absolute inset-0 z-0 block size-full text-left focus-visible:outline-none"
         type="button"
-        :aria-label="`Ver detalles de ${image.title}`"
-        @click="emit('open', image)"
+        aria-label="Copiar URL"
+        @click="emit('copy', image)"
       >
         <div v-if="isLoadingPreview" class="absolute inset-0 flex items-center justify-center">
           <LoaderCircleIcon :size="24" :stroke-width="1.8" class="animate-spin text-slate-500" />
@@ -18,31 +18,34 @@
           @load="isLoadingPreview = false"
           @error="handlePreviewError"
         />
+        <span
+          class="pointer-events-none absolute top-3 right-3 rounded-sm bg-ink px-2 py-1 text-xs font-semibold text-white opacity-0 shadow-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100"
+          role="tooltip"
+        >
+          Copiar URL
+        </span>
       </button>
       <div v-if="failedPreview" class="absolute inset-0 grid place-items-center p-4 text-center text-xs text-muted">No se pudo previsualizar</div>
     </div>
-    <div class="p-3">
+    <div class="p-3 space-y-0.5">
       <h3 class="truncate font-medium" :title="image.title">
         {{ image.title }}
       </h3>
-      <p class="mt-1 truncate text-xs text-muted" :title="image.originalFilename">
+      <p class="truncate text-xs text-muted" :title="image.originalFilename">
         {{ image.originalFilename }}
       </p>
-      <p class="mt-2 truncate text-xs text-muted" :title="image.authorName || image.authorEmail || 'Autor desconocido'">
+      <p class="truncate text-xs text-muted" :title="image.authorName || image.authorEmail || 'Autor desconocido'">
         {{ image.authorName || image.authorEmail || 'Autor desconocido' }}
       </p>
-      <div class="mt-3 flex items-center justify-between gap-2">
-        <p class="truncate text-[0.68rem] text-muted">{{ formatSize(image.sizeBytes) }} · {{ formatDate(image.uploadedAt) }}</p>
-        <Button
-          class="flex shrink-0 items-center gap-1 p-0 text-[0.68rem] font-semibold text-blue hover:underline"
-          variant="link"
-          size="sm"
-          type="button"
-          @click.stop="emit('copy', image)"
-        >
-          <CopyIcon :size="12" :stroke-width="1.8" />
-          {{ copied ? 'Copiada' : 'Copiar URL' }}
-        </Button>
+      <div class="min-w-0 space-y-0.5">
+        <p class="truncate text-xs text-muted">{{ formatSize(image.sizeBytes) }}</p>
+        <div class="flex items-center justify-between gap-1">
+          <p class="truncate text-xs text-muted">{{ formatDate(image.uploadedAt) }}</p>
+          <Button class="flex items-center gap-1" variant="outline" size="sm" type="button" @click="emit('open', image)">
+            <EyeIcon :size="13" :stroke-width="1.8" />
+            Ver
+          </Button>
+        </div>
       </div>
     </div>
   </article>
@@ -50,14 +53,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CopyIcon, LoaderCircleIcon } from 'lucide-vue-next'
+import { CopyIcon, EyeIcon, LoaderCircleIcon } from 'lucide-vue-next'
 import type { ImageRecord } from '@/services/convex'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 defineProps<{
   image: ImageRecord
-  copied: boolean
 }>()
 
 const emit = defineEmits<{
@@ -78,6 +80,6 @@ function formatSize(size: number): string {
 }
 
 function formatDate(timestamp: number): string {
-  return new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(timestamp)
+  return new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(timestamp)
 }
 </script>

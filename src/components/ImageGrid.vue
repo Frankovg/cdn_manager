@@ -44,7 +44,7 @@
       <p class="mt-2 text-sm text-muted">Prueba con otro título, descripción, nombre de archivo o rango de fechas.</p>
     </div>
     <div v-else class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-      <ImageCard v-for="image in filteredImages" :key="image._id" :image="image" :copied="copiedId === image._id" @open="openImageDetails" @copy="copyUrl" />
+      <ImageCard v-for="image in filteredImages" :key="image._id" :image="image" @open="openImageDetails" @copy="copyUrl" />
     </div>
 
     <ImageDetailsSheet

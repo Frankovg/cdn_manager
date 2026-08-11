@@ -7,6 +7,7 @@
 - Use `!foo.length` instead of `foo.length === 0`. Shorten boolean checks to `if (foo)` when checking for foo not being empty, null or undefined.
 - Never use array syntax for Vue `:class`, always prefer object syntax instead.
 - Vue single-file components must order their top-level blocks as `<template>`, then `<script>` or `<script setup>`, then `<style>` when present.
+- After finishing a task run `pnpm format`.
 
 # Authentication
 

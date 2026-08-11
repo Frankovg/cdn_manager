@@ -12,7 +12,6 @@
       @drop.prevent="dropFiles"
     >
       <p class="mb-2 hidden font-display text-xl md:block">Arrastra tus imágenes aquí</p>
-      <p class="mb-2 text-sm text-muted">Puedes elegir hasta 10 archivos de una vez.</p>
       <p class="font-mono mb-2 text-sm text-muted">JPG · PNG · Max 4MB</p>
       <input ref="fileInput" class="sr-only" type="file" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple @change="selectFiles" />
       <Button variant="outline" type="button" @click="openFilePicker">Elegir archivos</Button>
@@ -115,7 +114,7 @@ function validate(file: File): string | null {
 }
 
 function addFiles(incoming: File[]): void {
-  const additions = incoming.slice(0, 10).map((file) => ({
+  const additions = incoming.map((file) => ({
     id: `${file.name}-${file.size}-${file.lastModified}-${crypto.randomUUID()}`,
     file,
     status: validate(file) ? ('error' as const) : ('pending' as const),
@@ -123,11 +122,6 @@ function addFiles(incoming: File[]): void {
     ...(validate(file) ? { error: validate(file) ?? undefined } : {}),
   }))
   files.value = [...files.value, ...additions]
-  if (incoming.length > 10) {
-    toast.warning('Solo se pueden subir 10 archivos por lote.', {
-      duration: 3500,
-    })
-  }
   void upload()
 }
 

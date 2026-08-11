@@ -83,13 +83,11 @@ export const uploadRouter = {
   imageUploader: f({
     'image/jpeg': {
       maxFileSize: '4MB',
-      maxFileCount: 10,
       acl: 'public-read',
       contentDisposition: 'inline',
     },
     'image/png': {
       maxFileSize: '4MB',
-      maxFileCount: 10,
       acl: 'public-read',
       contentDisposition: 'inline',
     },

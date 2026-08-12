@@ -123,6 +123,29 @@ export async function recordUploadedImage(
   return client.mutation(anyApi.images.recordUploadedImage, image) as Promise<Id<'images'>>
 }
 
-export async function updateImageMetadata(client: ConvexClient, imageId: Id<'images'>, title: string, description?: string): Promise<void> {
-  await client.mutation(anyApi.images.updateMetadata, { imageId, title, description })
+export async function updateImageMetadata(
+  client: ConvexClient,
+  imageId: Id<'images'>,
+  projectId: Id<'projects'>,
+  title: string,
+  description?: string,
+): Promise<void> {
+  await client.mutation(
+    anyApi.images.updateMetadata,
+    { imageId, title, description },
+    {
+      optimisticUpdate: (localStore) => {
+        const current: ImageRecord[] | undefined = localStore.getQuery(anyApi.images.listByProject, { projectId })
+        if (!current) {
+          return
+        }
+
+        localStore.setQuery(
+          anyApi.images.listByProject,
+          { projectId },
+          current.map((image) => (image._id === imageId ? { ...image, title, description } : image)),
+        )
+      },
+    },
+  )
 }

@@ -107,15 +107,20 @@ export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<
   }
 
   async function saveImage(image: ImageRecord, title: string, description?: string): Promise<void> {
+    const previousTitle = image.title
+    const previousDescription = image.description
+    const nextTitle = title.trim()
+    const nextDescription = description?.trim() || undefined
+
+    image.title = nextTitle
+    image.description = nextDescription
+
     try {
-      await updateImageMetadata(convex, image._id, title, description)
-      const current = images.value.find((item) => item._id === image._id)
-      if (current) {
-        current.title = title.trim()
-        current.description = description?.trim() || undefined
-      }
+      await updateImageMetadata(convex, image._id, image.projectId, nextTitle, nextDescription)
       toast.success('Metadatos guardados', { duration: 2500 })
     } catch (reason) {
+      image.title = previousTitle
+      image.description = previousDescription
       const message = getErrorMessage(reason, 'No se pudieron guardar los metadatos.')
       toast.error(message, { duration: 3500 })
       throw reason

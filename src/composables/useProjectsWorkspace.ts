@@ -158,7 +158,6 @@ export function useProjectsWorkspace(convex: ConvexClient, route: RouteLocationN
 
     try {
       await renameProject(convex, selectedProjectId.value, name)
-      await loadProjects()
       toast.success('Proyecto renombrado', { duration: 2500 })
     } catch (reason) {
       renameError.value = getErrorMessage(reason, 'No se pudo renombrar el proyecto.')

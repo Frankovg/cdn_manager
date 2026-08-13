@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useAuth } from '@clerk/vue'
 import { RefreshCwIcon, UploadIcon } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
@@ -151,6 +151,15 @@ function clear(): void {
   files.value = []
 }
 
+watch(
+  () => props.projectId,
+  () => {
+    clear()
+    isDragging.value = false
+    progress.value = 0
+  },
+)
+
 function retry(item: UploadItem): void {
   const error = validate(item.file)
   item.error = error ?? undefined
@@ -168,6 +177,7 @@ async function upload(): Promise<void> {
   if (!readyFiles.value.length || isUploading.value) {
     return
   }
+  const uploadProjectId = props.projectId
   const batch = readyFiles.value.filter((item) => !validate(item.file))
   if (!batch.length) {
     return
@@ -203,7 +213,7 @@ async function upload(): Promise<void> {
         item.error = reason instanceof Error ? reason.message : 'No se pudo subir el archivo.'
       }
     }
-    if (successes.length) {
+    if (successes.length && props.projectId === uploadProjectId) {
       emit('uploaded', successes)
     }
     const errors = files.value.filter((item) => item.status === 'error').length

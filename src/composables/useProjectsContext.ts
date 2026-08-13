@@ -2,20 +2,17 @@ import { inject, provide, type ComputedRef, type InjectionKey, type Ref } from '
 import type { Id } from '../../convex/_generated/dataModel'
 import type { Project } from '@/services/convex'
 
-export interface ProjectsContext {
+interface ProjectsContext {
   projects: Ref<Project[]>
   projectsLoading: Ref<boolean>
   projectsError: Ref<string | null>
   canManageProjects: Ref<boolean>
   creatingProject: Ref<boolean>
   createError: Ref<string | null>
-  renamingProject: Ref<boolean>
-  renameError: Ref<string | null>
   selectedProjectId: Ref<Id<'projects'> | ''>
   selectedProject: ComputedRef<Project | null>
   selectProject: (projectId: Id<'projects'>) => void
   createProject: (name: string) => Promise<void>
-  renameProject: (name: string) => Promise<void>
 }
 
 const projectsContextKey: InjectionKey<ProjectsContext> = Symbol('projects')

@@ -57,18 +57,3 @@ export const create = mutation({
     })
   },
 })
-
-export const rename = mutation({
-  args: { projectId: v.id('projects'), name: v.string() },
-  handler: async (ctx, args) => {
-    await requireProjectsPermission(ctx)
-    const project = await ctx.db.get(args.projectId)
-    if (!project) {
-      throw new Error('The project does not exist.')
-    }
-    await ctx.db.patch(args.projectId, {
-      name: normalizeRequiredText(args.name, 'Project name'),
-      updatedAt: Date.now(),
-    })
-  },
-})

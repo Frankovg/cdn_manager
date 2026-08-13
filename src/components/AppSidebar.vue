@@ -20,39 +20,12 @@
       </div>
 
       <div class="border-l-2 border-coral bg-white/5 px-3 py-3">
-        <form v-if="selectedProject && editingName" class="flex items-center gap-2" @submit.prevent="submitRename">
-          <Input
-            ref="renameInput"
-            v-model="editedProjectName"
-            class="min-w-0 flex-1 bg-transparent border-l-0 border-r-0 border-t-0 border-b rounded-none p-0 text-white ring-0 focus:ring-0 focus:outline-none text-base font-medium"
-            maxlength="120"
-            aria-label="Nombre del proyecto"
-            :disabled="renamingProject"
-          />
-          <Button size="icon" type="submit" aria-label="Guardar nombre" :disabled="!editedProjectName.trim() || renamingProject">
-            <SaveIcon :size="15" :stroke-width="1.8" />
-          </Button>
-        </form>
-        <div v-else-if="selectedProject" class="flex items-center gap-2">
+        <div v-if="selectedProject">
           <p class="m-0 min-w-0 flex-1 truncate font-display text-base font-medium">
             {{ selectedProject.name }}
           </p>
-          <Button
-            v-if="canManageProjects"
-            class="shrink-0 text-slate-400"
-            variant="ghost"
-            size="icon"
-            type="button"
-            aria-label="Editar nombre"
-            @click="startRename"
-          >
-            <PencilIcon :size="15" :stroke-width="1.8" />
-          </Button>
         </div>
         <p v-else class="m-0 truncate font-display text-base font-medium text-slate-400">Elige un proyecto</p>
-        <p v-if="renameError" class="m-0 mt-2 text-[0.7rem] leading-relaxed text-[#ff9b87]" role="alert">
-          {{ renameError }}
-        </p>
       </div>
 
       <div class="flex min-h-0 flex-1 flex-col gap-3 pt-5">
@@ -119,7 +92,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
-import { PencilIcon, SaveIcon, SearchIcon, XIcon, PlusIcon } from 'lucide-vue-next'
+import { SearchIcon, XIcon, PlusIcon } from 'lucide-vue-next'
 import type { Id } from '../../convex/_generated/dataModel'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -141,18 +114,13 @@ const {
   selectedProject,
   canManageProjects,
   creatingProject,
-  renamingProject,
   projectsError,
   createError,
-  renameError,
   selectProject: selectProjectFromContext,
   createProject,
-  renameProject,
 } = useProjectsContext()
 
 const projectSearch = ref('')
-const editingName = ref(false)
-const editedProjectName = ref('')
 
 const filteredProjects = computed(() => {
   const query = projectSearch.value.trim().toLowerCase()
@@ -161,24 +129,6 @@ const filteredProjects = computed(() => {
   }
   return projects.value.filter((project) => project.name.toLowerCase().includes(query))
 })
-
-watch(
-  () => selectedProjectId.value,
-  () => {
-    editingName.value = false
-    editedProjectName.value = ''
-  },
-)
-
-watch(
-  () => renamingProject.value,
-  (renaming, wasRenaming) => {
-    if (wasRenaming && !renaming && !renameError.value) {
-      editingName.value = false
-      editedProjectName.value = ''
-    }
-  },
-)
 
 const projectLinks = new Map<Id<'projects'>, HTMLButtonElement>()
 const projectToReveal = ref<Id<'projects'> | ''>('')
@@ -229,27 +179,4 @@ async function submitProject(): Promise<void> {
   }
 }
 
-const renameInput = ref<{ $el?: HTMLElement } | null>(null)
-
-async function startRename(): Promise<void> {
-  if (!selectedProject.value?.name || !canManageProjects.value) {
-    return
-  }
-  editedProjectName.value = selectedProject.value.name
-  editingName.value = true
-  await nextTick()
-  const el = renameInput.value?.$el
-  if (el instanceof HTMLInputElement) {
-    el.focus()
-    el.select()
-  }
-}
-
-function submitRename(): void {
-  const name = editedProjectName.value.trim()
-  if (!name || renamingProject.value) {
-    return
-  }
-  void renameProject(name)
-}
 </script>

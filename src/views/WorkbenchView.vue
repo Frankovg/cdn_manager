@@ -56,14 +56,11 @@ const {
   canManageProjects,
   creatingProject,
   createError,
-  renamingProject,
-  renameError,
   selectedProjectId,
   selectedProject,
   loadProjects,
   selectProject,
   createProject: submitProject,
-  renameProject: renameSelectedProject,
 } = projectsWorkspace
 
 const { images, imagesLoading, imagesError, handleUploaded, saveImage } = imageLibrary
@@ -88,13 +85,10 @@ provideProjectsContext({
   canManageProjects,
   creatingProject,
   createError,
-  renamingProject,
-  renameError,
   selectedProjectId,
   selectedProject,
   selectProject,
   createProject: submitProject,
-  renameProject: renameSelectedProject,
 })
 watch(
   () => [authState.isLoaded, authState.isSignedIn],

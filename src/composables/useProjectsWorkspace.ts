@@ -3,7 +3,7 @@ import type { ConvexClient } from 'convex/browser'
 import type { LocationQuery, RouteLocationNormalizedLoaded, Router } from 'vue-router'
 import type { Id } from '../../convex/_generated/dataModel'
 import { toast } from 'vue-sonner'
-import { createProject, getProjectsManagementPermission, renameProject, subscribeProjects, type Project } from '@/services/convex'
+import { createProject, getProjectsManagementPermission, subscribeProjects, type Project } from '@/services/convex'
 
 export function readProjectId(query: LocationQuery): Id<'projects'> | '' {
   const raw = query.project
@@ -28,14 +28,11 @@ interface ProjectsWorkspace {
   canManageProjects: Ref<boolean>
   creatingProject: Ref<boolean>
   createError: Ref<string | null>
-  renamingProject: Ref<boolean>
-  renameError: Ref<string | null>
   selectedProjectId: Ref<Id<'projects'> | ''>
   selectedProject: ComputedRef<Project | null>
   loadProjects: () => Promise<void>
   selectProject: (projectId: Id<'projects'>) => void
   createProject: (name: string) => Promise<void>
-  renameProject: (name: string) => Promise<void>
 }
 
 function getErrorMessage(reason: unknown, fallback: string): string {
@@ -50,8 +47,6 @@ export function useProjectsWorkspace(convex: ConvexClient, route: RouteLocationN
   const selectedProjectId = ref<Id<'projects'> | ''>('')
   const creatingProject = ref(false)
   const createError = ref<string | null>(null)
-  const renamingProject = ref(false)
-  const renameError = ref<string | null>(null)
   let unsubscribeProjects: (() => void) | null = null
 
   function stopProjectsSubscription(): void {
@@ -121,7 +116,6 @@ export function useProjectsWorkspace(convex: ConvexClient, route: RouteLocationN
 
   function selectProject(projectId: Id<'projects'>): void {
     selectedProjectId.value = projectId
-    renameError.value = null
   }
 
   async function submitProject(name: string): Promise<void> {
@@ -145,25 +139,6 @@ export function useProjectsWorkspace(convex: ConvexClient, route: RouteLocationN
       toast.error(createError.value, { duration: 3500 })
     } finally {
       creatingProject.value = false
-    }
-  }
-
-  async function renameSelectedProject(name: string): Promise<void> {
-    if (!selectedProjectId.value || !name.trim() || renamingProject.value) {
-      return
-    }
-
-    renamingProject.value = true
-    renameError.value = null
-
-    try {
-      await renameProject(convex, selectedProjectId.value, name)
-      toast.success('Proyecto renombrado', { duration: 2500 })
-    } catch (reason) {
-      renameError.value = getErrorMessage(reason, 'No se pudo renombrar el proyecto.')
-      toast.error(renameError.value, { duration: 3500 })
-    } finally {
-      renamingProject.value = false
     }
   }
 
@@ -191,13 +166,10 @@ export function useProjectsWorkspace(convex: ConvexClient, route: RouteLocationN
     canManageProjects,
     creatingProject,
     createError,
-    renamingProject,
-    renameError,
     selectedProjectId,
     selectedProject,
     loadProjects,
     selectProject,
     createProject: submitProject,
-    renameProject: renameSelectedProject,
   }
 }

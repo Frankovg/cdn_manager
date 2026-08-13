@@ -91,27 +91,6 @@ export async function getProjectsManagementPermission(client: ConvexClient): Pro
   return client.query(anyApi.projects.canManage, {}) as Promise<boolean>
 }
 
-export async function renameProject(client: ConvexClient, projectId: Id<'projects'>, name: string): Promise<void> {
-  await client.mutation(
-    anyApi.projects.rename,
-    { projectId, name },
-    {
-      optimisticUpdate: (localStore) => {
-        const current: Project[] | undefined = localStore.getQuery(anyApi.projects.list, {})
-        if (!current) {
-          return
-        }
-
-        localStore.setQuery(
-          anyApi.projects.list,
-          {},
-          current.map((project) => (project._id === projectId ? { ...project, name, updatedAt: Date.now() } : project)),
-        )
-      },
-    },
-  )
-}
-
 export async function getImages(client: ConvexClient, projectId: Id<'projects'>): Promise<ImageRecord[]> {
   return client.query(anyApi.images.listByProject, { projectId }) as Promise<ImageRecord[]>
 }

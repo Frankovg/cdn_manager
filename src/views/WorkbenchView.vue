@@ -6,7 +6,7 @@
     </div>
     <template v-else-if="selectedProject">
       <FileUploader :project-id="selectedProjectId" @uploaded="handleUploaded" />
-      <ImageGrid :images="images" :loading="imagesLoading" :error="imagesError" :project-name="selectedProject.name" :save-image="saveImage" />
+      <ImageGrid :images="images" :error="imagesError" :project-name="selectedProject.name" :save-image="saveImage" />
     </template>
     <div v-else class="grid min-h-80 content-center justify-items-start border border-line bg-surface p-8">
       <p class="mb-2 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-muted">biblioteca vacía</p>
@@ -63,7 +63,7 @@ const {
   createProject: submitProject,
 } = projectsWorkspace
 
-const { images, imagesLoading, imagesError, handleUploaded, saveImage } = imageLibrary
+const { images, imagesError, handleUploaded, saveImage } = imageLibrary
 
 const health = ref<AuthenticatedHealth | null>(null)
 

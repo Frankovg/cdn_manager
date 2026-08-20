@@ -7,7 +7,6 @@ import { getImages, recordUploadedImage, updateImageMetadata, type ImageRecord }
 
 interface ImageLibrary {
   images: Ref<ImageRecord[]>
-  imagesLoading: Ref<boolean>
   imagesError: Ref<string | null>
   loadImages: () => Promise<void>
   handleUploaded: (uploaded: UploadedFile[]) => Promise<void>
@@ -24,12 +23,10 @@ function isOptimisticProjectId(projectId: Id<'projects'> | ''): boolean {
 
 export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<'projects'> | ''>): ImageLibrary {
   const images = ref<ImageRecord[]>([])
-  const imagesLoading = ref(false)
   const imagesError = ref<string | null>(null)
 
   function resetImages(): void {
     images.value = []
-    imagesLoading.value = false
     imagesError.value = null
   }
 
@@ -39,7 +36,6 @@ export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<
       resetImages()
       return
     }
-    imagesLoading.value = true
     imagesError.value = null
     try {
       const loadedImages = await getImages(convex, projectId)
@@ -49,10 +45,6 @@ export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<
     } catch (reason) {
       if (selectedProjectId.value === projectId) {
         imagesError.value = getErrorMessage(reason, 'No se pudieron cargar las imágenes.')
-      }
-    } finally {
-      if (selectedProjectId.value === projectId) {
-        imagesLoading.value = false
       }
     }
   }
@@ -137,7 +129,6 @@ export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<
 
   return {
     images,
-    imagesLoading,
     imagesError,
     loadImages,
     handleUploaded,

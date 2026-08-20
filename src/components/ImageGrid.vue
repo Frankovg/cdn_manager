@@ -29,10 +29,7 @@
       </div>
     </div>
 
-    <div v-if="loading" class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4" aria-live="polite">
-      <div v-for="index in 8" :key="index" class="aspect-square animate-pulse bg-zinc-200" />
-    </div>
-    <div v-else-if="error" class="border border-red-200 bg-red-50 p-5 text-sm text-red-800" role="alert">
+    <div v-if="error" class="border border-red-200 bg-red-50 p-5 text-sm text-red-800" role="alert">
       {{ error }}
     </div>
     <div v-else-if="!images.length" class="border border-dashed border-line bg-surface p-10 text-center">
@@ -72,7 +69,6 @@ import ImageDetailsSheet from '@/components/ImageDetailsSheet.vue'
 
 const props = defineProps<{
   images: ImageRecord[]
-  loading: boolean
   error: string | null
   projectName: string
   saveImage: (image: ImageRecord, title: string, description?: string) => Promise<void>

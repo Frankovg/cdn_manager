@@ -10,16 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from "@clerk/vue";
-import { useConvexClient } from "convex-vue";
-import { PUBLIC_CLERK_PUBLISHABLE_KEY } from "astro:env/client";
-import { useRoute } from "vue-router";
-import { onMounted, watch } from "vue";
-import { authState, setAuthState } from "@/services/auth-state";
-import { attachClerkToken } from "@/services/convex";
+import { useAuth } from '@clerk/vue'
+import { useConvexClient } from 'convex-vue'
+import { PUBLIC_CLERK_PUBLISHABLE_KEY } from 'astro:env/client'
+import { useRoute } from 'vue-router'
+import { onMounted, watch } from 'vue'
+import { authState, setAuthState } from '@/services/auth-state'
+import { attachClerkToken } from '@/services/convex'
 
 const route = useRoute()
-const convex = useConvexClient();
+const convex = useConvexClient()
 
 if (PUBLIC_CLERK_PUBLISHABLE_KEY) {
   try {
@@ -34,8 +34,8 @@ if (PUBLIC_CLERK_PUBLISHABLE_KEY) {
         })
       },
       { immediate: true },
-    );
-    attachClerkToken(convex, (options) => getToken.value(options));
+    )
+    attachClerkToken(convex, (options) => getToken.value(options))
   } catch {
     // The app can still render its setup guide when Clerk has not been configured.
     setAuthState({ isLoaded: true, isSignedIn: false })
@@ -46,7 +46,7 @@ if (PUBLIC_CLERK_PUBLISHABLE_KEY) {
 
 onMounted(() => {
   if (!PUBLIC_CLERK_PUBLISHABLE_KEY) {
-    setAuthState({ isLoaded: true });
+    setAuthState({ isLoaded: true })
   }
 })
 </script>

@@ -28,23 +28,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useConvexClient } from "convex-vue";
-import AppLayout from "@/layouts/AppLayout.vue";
-import FileUploader from "@/components/FileUploader.vue";
-import ImageGrid from "@/components/ImageGrid.vue";
-import { provideProjectsContext } from "@/composables/useProjectsContext";
-import { useImageLibrary } from "@/composables/useImageLibrary";
-import { useProjectsWorkspace } from "@/composables/useProjectsWorkspace";
-import { authState } from "@/services/auth-state";
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useConvexClient } from 'convex-vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import FileUploader from '@/components/FileUploader.vue'
+import ImageGrid from '@/components/ImageGrid.vue'
+import { provideProjectsContext } from '@/composables/useProjectsContext'
+import { useImageLibrary } from '@/composables/useImageLibrary'
+import { useProjectsWorkspace } from '@/composables/useProjectsWorkspace'
+import { authState } from '@/services/auth-state'
 import { getAuthenticatedHealth, type AuthenticatedHealth } from '@/services/convex'
 
-const route = useRoute();
-const router = useRouter();
-const convex = useConvexClient();
-const loading = ref(true);
-const error = ref<string | null>(null);
+const route = useRoute()
+const router = useRouter()
+const convex = useConvexClient()
+const loading = ref(true)
+const error = ref<string | null>(null)
 
 const projectsWorkspace = useProjectsWorkspace(convex, route, router)
 const imageLibrary = useImageLibrary(convex, projectsWorkspace.selectedProjectId)

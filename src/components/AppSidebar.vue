@@ -178,5 +178,4 @@ async function submitProject(): Promise<void> {
     projectToReveal.value = ''
   }
 }
-
 </script>

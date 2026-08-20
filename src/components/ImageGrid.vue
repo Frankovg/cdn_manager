@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-8">
+  <section ref="catalogStart" class="mt-8">
     <div class="mb-5 space-y-3">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -40,9 +40,35 @@
       <p class="font-display text-xl">No hay coincidencias.</p>
       <p class="mt-2 text-sm text-muted">Prueba con otro título, descripción, nombre de archivo o rango de fechas.</p>
     </div>
-    <div v-else class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-      <ImageCard v-for="image in filteredImages" :key="image._id" :image="image" @open="openImageDetails" @copy="copyUrl" />
-    </div>
+    <template v-else>
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
+        <ImageCard v-for="image in paginatedImages" :key="image._id" :image="image" @open="openImageDetails" @copy="copyUrl" />
+      </div>
+      <div class="mt-8 w-full">
+        <Pagination
+          v-if="filteredImages.length > IMAGES_PER_PAGE"
+          v-slot="{ page }"
+          aria-label="Paginación del catálogo"
+          :items-per-page="IMAGES_PER_PAGE"
+          :page="currentPage"
+          :sibling-count="1"
+          :total="filteredImages.length"
+          show-edges
+          @update:page="setPage"
+        >
+          <PaginationContent v-slot="{ items }" class="justify-end">
+            <PaginationPrevious />
+            <template v-for="(item, index) in items" :key="item.type === 'page' ? item.value : `ellipsis-${index}`">
+              <PaginationItem v-if="item.type === 'page'" :is-active="item.value === page" :value="item.value">
+                {{ item.value }}
+              </PaginationItem>
+              <PaginationEllipsis v-else />
+            </template>
+            <PaginationNext />
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </template>
 
     <ImageDetailsSheet
       v-model:open="imageSheetOpen"
@@ -55,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type Ref } from 'vue'
+import { computed, nextTick, ref, watch, type Ref } from 'vue'
 import type { DateRange } from 'reka-ui'
 import { getLocalTimeZone } from '@internationalized/date'
 import { SearchIcon, XIcon } from 'lucide-vue-next'
@@ -66,6 +92,7 @@ import { Input } from '@/components/ui/input'
 import ImageCard from '@/components/ImageCard.vue'
 import ImageDateFilterDialog from '@/components/ImageDateFilterDialog.vue'
 import ImageDetailsSheet from '@/components/ImageDetailsSheet.vue'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 
 const props = defineProps<{
   images: ImageRecord[]
@@ -90,6 +117,9 @@ const dateRangeLabel = computed(() => {
 })
 
 const search = ref('')
+const catalogStart = ref<HTMLElement | null>(null)
+const currentPage = ref(1)
+const IMAGES_PER_PAGE = 40
 
 const filteredImages = computed(() => {
   const query = search.value.trim().toLowerCase()
@@ -103,6 +133,31 @@ const filteredImages = computed(() => {
     return [image.title, image.description, image.originalFilename].some((value) => value?.toLowerCase().includes(query))
   })
 })
+
+const pageCount = computed(() => Math.ceil(filteredImages.value.length / IMAGES_PER_PAGE))
+
+const paginatedImages = computed(() => {
+  const start = (currentPage.value - 1) * IMAGES_PER_PAGE
+  return filteredImages.value.slice(start, start + IMAGES_PER_PAGE)
+})
+
+watch([search, appliedDateRange], () => {
+  currentPage.value = 1
+})
+
+watch(pageCount, (count) => {
+  currentPage.value = Math.min(currentPage.value, Math.max(count, 1))
+})
+
+function setPage(page: number): void {
+  if (page === currentPage.value) {
+    return
+  }
+  currentPage.value = page
+  void nextTick(() => {
+    catalogStart.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  })
+}
 
 function emptyDateRange(): DateRange {
   return { start: undefined, end: undefined }

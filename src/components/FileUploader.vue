@@ -12,8 +12,8 @@
       @drop.prevent="dropFiles"
     >
       <p class="mb-2 hidden font-display text-xl md:block">Arrastra tus imágenes aquí</p>
-      <p class="font-mono mb-2 text-sm text-muted">JPG · PNG · WebP · Max 4MB</p>
-      <input ref="fileInput" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple @change="selectFiles" />
+      <p class="font-mono mb-2 text-sm text-muted">JPG · PNG · WebP · SVG · Max 4MB</p>
+      <input ref="fileInput" class="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml,.jpg,.jpeg,.png,.webp,.svg" multiple @change="selectFiles" />
       <Button variant="outline" type="button" @click="openFilePicker">Elegir archivos</Button>
     </div>
 

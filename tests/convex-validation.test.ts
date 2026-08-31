@@ -23,16 +23,18 @@ describe('project permission', () => {
 })
 
 describe('image validation', () => {
-  it('accepts JPG, JPEG, PNG, and WebP files up to 4 MB', () => {
+  it('accepts JPG, JPEG, PNG, WebP, and SVG files up to 4 MB', () => {
     expect(() => validateImageFile('foto.jpg', 'image/jpeg', MAX_IMAGE_SIZE_BYTES)).not.toThrow()
     expect(() => validateImageFile('foto.JPEG', 'image/jpeg', 1)).not.toThrow()
     expect(() => validateImageFile('foto.png', 'image/png', 1)).not.toThrow()
     expect(() => validateImageFile('foto.webp', 'image/webp', 1)).not.toThrow()
+    expect(() => validateImageFile('logo.svg', 'image/svg+xml', 1)).not.toThrow()
   })
 
   it('rejects unsupported MIME types, extensions, and file sizes', () => {
-    expect(() => validateImageFile('photo.gif', 'image/gif', 1)).toThrow('Only JPG, JPEG, PNG, and WebP')
-    expect(() => validateImageFile('photo.png', 'image/jpeg', 1)).toThrow('Only JPG, JPEG, PNG, and WebP')
+    expect(() => validateImageFile('photo.gif', 'image/gif', 1)).toThrow('Only JPG, JPEG, PNG, WebP, and SVG')
+    expect(() => validateImageFile('photo.png', 'image/jpeg', 1)).toThrow('Only JPG, JPEG, PNG, WebP, and SVG')
+    expect(() => validateImageFile('logo.svg', 'image/png', 1)).toThrow('Only JPG, JPEG, PNG, WebP, and SVG')
     expect(() => validateImageFile('photo.jpg', 'image/jpeg', MAX_IMAGE_SIZE_BYTES + 1)).toThrow('at most 4 MB')
   })
 

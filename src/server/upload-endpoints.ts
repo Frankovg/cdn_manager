@@ -96,6 +96,11 @@ export const uploadRouter = {
       acl: 'public-read',
       contentDisposition: 'inline',
     },
+    'image/svg+xml': {
+      maxFileSize: '4MB',
+      acl: 'public-read',
+      contentDisposition: 'inline',
+    },
   })
     .middleware(async ({ req, files }) => {
       const user = await authenticateUploadRequest(req)

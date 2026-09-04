@@ -20,4 +20,4 @@ whisper deploy
 pnpm run deploy
 
 wave ar cdn-assets-manager --repo apps --source .
-wave deploy cdn-assets-manager --repo apps --sentry altipla-node-backends
+wave deploy cdn-assets-manager --repo apps --sentry altipla-node-backends --env-file .env.production

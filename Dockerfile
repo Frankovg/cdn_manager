@@ -24,8 +24,6 @@ COPY pnpm-workspace.yaml ./
 RUN --mount=type=secret,id=npmrc,target=/root/.npmrc pnpm install --prod --frozen-lockfile
 
 COPY --from=build /opt/ac/dist ./dist
-COPY .env.production .env
-
 ENV HOST=0.0.0.0
 
-CMD ["node", "--env-file", ".env", "dist/server/entry.mjs"]
+CMD ["node", "dist/server/entry.mjs"]

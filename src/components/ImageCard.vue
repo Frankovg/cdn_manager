@@ -56,7 +56,7 @@ import { ref } from 'vue'
 import { CopyIcon, EyeIcon, LoaderCircleIcon } from 'lucide-vue-next'
 import type { ImageRecord } from '@/services/convex'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 defineProps<{
   image: ImageRecord

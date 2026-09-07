@@ -5,7 +5,7 @@ import type { HTMLAttributes } from 'vue'
 import { XIcon } from 'lucide-vue-next'
 import { reactiveOmit } from '@vueuse/core'
 import { DialogClose, DialogContent, DialogOverlay, DialogPortal, useForwardPropsEmits } from 'reka-ui'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 defineOptions({
   inheritAttrs: false,

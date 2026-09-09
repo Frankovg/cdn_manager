@@ -24,6 +24,7 @@
     "@astrojs/node": "^11.1.0",
     "@astrojs/vue": "^7.0.2",
     "@clerk/vue": "^2.2.0",
+    "@convex-dev/migrations": "^0.3.6",
     "@internationalized/date": "^3.12.3",
     "@lucide/vue": "^1.29.0",
     "@sentry/astro": "^10.69.0",

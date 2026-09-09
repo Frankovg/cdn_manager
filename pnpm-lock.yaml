@@ -16,6 +16,9 @@ importers:
       '@clerk/vue':
         specifier: ^2.2.0
         version: 2.4.23(vue@3.5.41(typescript@5.8.3))
+      '@convex-dev/migrations':
+        specifier: ^0.3.6
+        version: 0.3.6(convex-helpers@0.1.124(@standard-schema/spec@1.1.0)(convex@1.43.0)(typescript@5.8.3)(zod@4.4.3))(convex@1.43.0)
       '@internationalized/date':
         specifier: ^3.12.3
         version: 3.12.3
@@ -451,6 +454,12 @@ packages:
     engines: { node: '>=20.9.0' }
     peerDependencies:
       vue: ^3.2.0
+
+  '@convex-dev/migrations@0.3.6':
+    resolution: { integrity: sha512-cURYG4uy323MDi55QWNF5HAGemS4QspSgJ4uP+gGPAJdBLBbk2KFO7toFlKhacc1NinJQiG6+D/YEFyFyBS1/A== }
+    peerDependencies:
+      convex: ^1.42.0
+      convex-helpers: ^0.1.115
 
   '@effect/platform@0.90.3':
     resolution: { integrity: sha512-XvQ37yzWQKih4Du2CYladd1i/MzqtgkTPNCaN6Ku6No4CK83hDtXIV/rP03nEoBg2R3Pqgz6gGWmE2id2G81HA== }
@@ -2151,6 +2160,28 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: { integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg== }
+
+  convex-helpers@0.1.124:
+    resolution: { integrity: sha512-Gbu/jq6I3x5Y51cXP5c7+CI3t15vX5Xi2G0tOym3rxpBtYqrI+qWwxkqZgJYrHHccY42wZudB8h6kS3fak8Aeg== }
+    hasBin: true
+    peerDependencies:
+      '@standard-schema/spec': ^1.0.0
+      convex: ^1.43.0
+      hono: ^4.0.5
+      react: ^17.0.2 || ^18.0.0 || ^19.0.0
+      typescript: ^5.5 || ^6.0.0 || ^7.0.0
+      zod: ^3.25.0 || ^4.0.0
+    peerDependenciesMeta:
+      '@standard-schema/spec':
+        optional: true
+      hono:
+        optional: true
+      react:
+        optional: true
+      typescript:
+        optional: true
+      zod:
+        optional: true
 
   convex-vue@0.1.5:
     resolution: { integrity: sha512-0kyM4rkGzDDW9mrK4O3q9cCByzezBm6cnjfeB+i5Wc/BNKfXeAWKFyOKvAuCqjC8WGCbUG/OtbMFbUlWT3dD3g== }
@@ -4231,6 +4262,11 @@ snapshots:
       - react
       - react-dom
 
+  '@convex-dev/migrations@0.3.6(convex-helpers@0.1.124(@standard-schema/spec@1.1.0)(convex@1.43.0)(typescript@5.8.3)(zod@4.4.3))(convex@1.43.0)':
+    dependencies:
+      convex: 1.43.0
+      convex-helpers: 0.1.124(@standard-schema/spec@1.1.0)(convex@1.43.0)(typescript@5.8.3)(zod@4.4.3)
+
   '@effect/platform@0.90.3(effect@3.17.7)':
     dependencies:
       '@opentelemetry/semantic-conventions': 1.43.0
@@ -5754,6 +5790,14 @@ snapshots:
   consola@3.4.2: {}
 
   convert-source-map@2.0.0: {}
+
+  convex-helpers@0.1.124(@standard-schema/spec@1.1.0)(convex@1.43.0)(typescript@5.8.3)(zod@4.4.3):
+    dependencies:
+      convex: 1.43.0
+    optionalDependencies:
+      '@standard-schema/spec': 1.1.0
+      typescript: 5.8.3
+      zod: 4.4.3
 
   convex-vue@0.1.5(convex@1.43.0)(vue@3.5.41(typescript@5.8.3)):
     dependencies:

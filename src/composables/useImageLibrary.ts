@@ -2,14 +2,14 @@ import { ref, watch, type Ref } from 'vue'
 import type { ConvexClient } from 'convex/browser'
 import { toast } from 'vue-sonner'
 import type { Id } from '../../convex/_generated/dataModel'
-import type { UploadedFile } from '@/components/FileUploader.vue'
+import type { UploadedFile } from '@/composables/useFileUploader'
 import { getImages, recordUploadedImage, updateImageMetadata, type ImageRecord } from '@/services/convex'
 
 interface ImageLibrary {
   images: Ref<ImageRecord[]>
   imagesError: Ref<string | null>
   loadImages: () => Promise<void>
-  handleUploaded: (uploaded: UploadedFile[]) => Promise<void>
+  handleUploaded: (uploaded: UploadedFile[], projectId: string) => Promise<void>
   saveImage: (image: ImageRecord, title: string, description?: string) => Promise<void>
 }
 
@@ -49,8 +49,8 @@ export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<
     }
   }
 
-  async function handleUploaded(uploaded: UploadedFile[]): Promise<void> {
-    if (!selectedProjectId.value) {
+  async function handleUploaded(uploaded: UploadedFile[], projectId: string): Promise<void> {
+    if (!projectId) {
       return
     }
     const failed: string[] = []
@@ -58,7 +58,7 @@ export function useImageLibrary(convex: ConvexClient, selectedProjectId: Ref<Id<
     for (const file of uploaded) {
       try {
         await recordUploadedImage(convex, {
-          projectId: selectedProjectId.value,
+          projectId: projectId as Id<'projects'>,
           fileKey: file.key,
           publicUrl: file.ufsUrl,
           originalFilename: file.name,

@@ -13,3 +13,7 @@
 
 - Every page and route in the Vue application must require a valid authenticated Clerk session. Do not expose public pages, including the root route, fallback routes, error pages, or newly added routes.
 - Enforce authentication with Vue Router guards and verify the session before mounting or rendering page content, including direct navigation to a URL and while Clerk is still loading.
+
+# Convex Generated Files
+
+- `convex/_generated/` is excluded from Prettier via `.prettierignore`. Convex regenerates it with double quotes and semicolons, and that style is correct there. Do not reformat it or convert it to single quotes.

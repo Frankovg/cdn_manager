@@ -8,27 +8,31 @@
  * @module
  */
 
-import type * as auth from '../auth.js'
-import type * as health from '../health.js'
-import type * as http from '../http.js'
-import type * as images from '../images.js'
-import type * as migrations from '../migrations.js'
-import type * as projects from '../projects.js'
-import type * as uploadthing from '../uploadthing.js'
-import type * as validation from '../validation.js'
+import type * as auth from "../auth.js";
+import type * as health from "../health.js";
+import type * as http from "../http.js";
+import type * as images from "../images.js";
+import type * as migrations from "../migrations.js";
+import type * as projects from "../projects.js";
+import type * as uploadthing from "../uploadthing.js";
+import type * as validation from "../validation.js";
 
-import type { ApiFromModules, FilterApi, FunctionReference } from 'convex/server'
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth
-  health: typeof health
-  http: typeof http
-  images: typeof images
-  migrations: typeof migrations
-  projects: typeof projects
-  uploadthing: typeof uploadthing
-  validation: typeof validation
-}>
+  auth: typeof auth;
+  health: typeof health;
+  http: typeof http;
+  images: typeof images;
+  migrations: typeof migrations;
+  projects: typeof projects;
+  uploadthing: typeof uploadthing;
+  validation: typeof validation;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.
@@ -38,7 +42,10 @@ declare const fullApi: ApiFromModules<{
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-export declare const api: FilterApi<typeof fullApi, FunctionReference<any, 'public'>>
+export declare const api: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
 
 /**
  * A utility for referencing Convex functions in your app's internal API.
@@ -48,8 +55,11 @@ export declare const api: FilterApi<typeof fullApi, FunctionReference<any, 'publ
  * const myFunctionReference = internal.myModule.myFunction;
  * ```
  */
-export declare const internal: FilterApi<typeof fullApi, FunctionReference<any, 'internal'>>
+export declare const internal: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
 
 export declare const components: {
-  migrations: import('@convex-dev/migrations/_generated/component.js').ComponentApi<'migrations'>
-}
+  migrations: import("@convex-dev/migrations/_generated/component.js").ComponentApi<"migrations">;
+};

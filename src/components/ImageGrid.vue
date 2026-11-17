@@ -18,7 +18,7 @@
         <span class="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 py-1 text-xs text-ink">
           {{ dateRangeLabel }}
           <button
-            class="inline-flex size-4 items-center justify-center rounded-full text-muted transition hover:bg-zinc-100 hover:text-ink"
+            class="inline-flex size-4 items-center justify-center rounded-full text-muted transition hover:bg-dark-primary hover:text-ink"
             type="button"
             aria-label="Quitar filtro de fecha"
             @click="clearDateRange"
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <div v-if="error" class="border border-red-200 bg-red-50 p-5 text-sm text-red-800" role="alert">
+    <div v-if="error" class="border border-pink/40 bg-pink/10 p-5 text-sm text-pink" role="alert">
       {{ error }}
     </div>
     <div v-else-if="!images.length" class="border border-dashed border-line bg-surface p-10 text-center">

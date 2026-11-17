@@ -13,7 +13,7 @@
       </SheetHeader>
       <form class="min-h-0 flex-1 overflow-y-auto" @submit.prevent="save">
         <div class="space-y-6 px-5 py-5 sm:px-7 sm:py-7">
-          <div class="flex min-h-56 items-center justify-center overflow-hidden border border-line bg-zinc-100 sm:min-h-72">
+          <div class="flex min-h-56 items-center justify-center overflow-hidden border border-line bg-raised sm:min-h-72">
             <img class="max-h-[30rem] w-full object-contain" :src="image.publicUrl" :alt="image.title" />
           </div>
           <div class="grid gap-6 sm:grid-cols-[minmax(0,1fr)_12rem]">
@@ -30,7 +30,7 @@
                 Descripción
                 <Textarea v-model="editDescription" class="mt-1.5 min-h-28" rows="4" placeholder="Añade una descripción opcional…" />
               </label>
-              <p v-if="editError" class="text-xs text-coral" role="alert">
+              <p v-if="editError" class="text-xs text-pink" role="alert">
                 {{ editError }}
               </p>
             </div>

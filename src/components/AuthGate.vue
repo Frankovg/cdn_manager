@@ -2,7 +2,7 @@
   <slot v-if="route.name === 'sign-in' || (authState.isLoaded && authState.isSignedIn)" />
   <div v-else class="grid min-h-screen place-items-center bg-paper px-5" aria-live="polite">
     <div class="text-center">
-      <span class="mb-4 inline-flex size-3 rounded-full bg-coral" />
+      <span class="mb-4 inline-flex size-3 rounded-full bg-pink" />
       <p class="font-mono text-xs tracking-[0.18em] text-muted uppercase">verificando acceso</p>
       <p class="mt-2 text-sm text-muted">Espera un momento mientras comprobamos tu sesión.</p>
     </div>

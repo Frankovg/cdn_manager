@@ -1,7 +1,7 @@
 <template>
   <AppLayout v-if="authState.isLoaded && authState.isSignedIn">
     <div v-if="loading" class="border border-line bg-surface p-8 text-sm text-muted" role="status">Verificando conexión con Convex…</div>
-    <div v-else-if="error" class="border border-red-200 bg-red-50 p-8 text-sm text-red-800" role="alert">
+    <div v-else-if="error" class="border border-pink/40 bg-pink/10 p-8 text-sm text-pink" role="alert">
       {{ error }}
     </div>
     <template v-else-if="selectedProject">
@@ -12,7 +12,7 @@
       <p class="mb-2 font-mono text-[0.62rem] uppercase tracking-[0.13em] text-muted">biblioteca vacía</p>
       <h1 class="m-0 font-display text-4xl font-medium tracking-[-0.045em]">
         Elige un proyecto
-        <span class="text-coral">.</span>
+        <span class="text-pink">.</span>
       </h1>
       <p class="mb-0 mt-3 text-sm text-muted">Crea o selecciona un proyecto en la navegación para empezar.</p>
     </div>
@@ -21,7 +21,7 @@
     <p class="eyebrow">verificando acceso</p>
     <h1 class="font-display text-5xl font-semibold">
       Un momento
-      <span class="text-coral">.</span>
+      <span class="text-pink">.</span>
     </h1>
     <p class="mt-3 text-sm text-muted">Estamos verificando tu sesión antes de abrir la biblioteca privada.</p>
   </section>

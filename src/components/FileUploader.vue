@@ -3,7 +3,7 @@
     <div
       class="border border-dashed p-6 text-center transition md:p-10"
       :class="{
-        'border-blue bg-blue/5': isDragging,
+        'border-mint bg-mint/5': isDragging,
         'border-line bg-paper': !isDragging,
       }"
       @dragenter.prevent="isDragging = true"
@@ -26,17 +26,17 @@
 
     <div v-if="files.length" class="mt-5 space-y-2" aria-live="polite">
       <div v-for="item in files" :key="item.id" class="flex items-center gap-3 border-b border-line py-2 text-sm">
-        <span class="grid size-7 shrink-0 place-items-center bg-blue/10 text-blue">
+        <span class="grid size-7 shrink-0 place-items-center bg-mint/10 text-mint">
           <UploadIcon :size="14" :stroke-width="1.8" />
         </span>
         <div class="min-w-0 flex-1">
           <p class="truncate font-medium">{{ item.file.name }}</p>
           <p class="text-xs text-muted">{{ formatSize(item.file.size) }}</p>
-          <p v-if="item.error" class="truncate text-xs text-coral">
+          <p v-if="item.error" class="truncate text-xs text-pink">
             {{ item.error }}
           </p>
-          <div v-if="item.status === 'uploading'" class="mt-1 h-1 bg-zinc-100">
-            <div class="h-1 bg-blue transition-all" :style="{ width: `${item.progress}%` }" />
+          <div v-if="item.status === 'uploading'" class="mt-1 h-1 bg-raised">
+            <div class="h-1 bg-mint transition-all" :style="{ width: `${item.progress}%` }" />
           </div>
         </div>
         <span class="text-xs" :class="statusClass(item.status)">{{ statusLabel(item.status) }}</span>
@@ -111,9 +111,9 @@ function statusLabel(status: UploadItem['status']): string {
 function statusClass(status: UploadItem['status']): string {
   return {
     pending: 'text-muted',
-    uploading: 'text-blue',
-    completed: 'text-green-700',
-    error: 'text-coral',
+    uploading: 'text-warning',
+    completed: 'text-mint',
+    error: 'text-pink',
   }[status]
 }
 </script>

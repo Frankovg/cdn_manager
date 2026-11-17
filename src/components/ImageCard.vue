@@ -1,6 +1,6 @@
 <template>
   <article class="group overflow-hidden border border-line bg-surface">
-    <div class="relative aspect-square bg-zinc-100">
+    <div class="relative aspect-square bg-raised">
       <button
         class="group/image absolute inset-0 z-0 block size-full text-left focus-visible:outline-none"
         type="button"
@@ -8,7 +8,7 @@
         @click="emit('copy', image)"
       >
         <div v-if="isLoadingPreview" class="absolute inset-0 flex items-center justify-center">
-          <LoaderCircleIcon :size="24" :stroke-width="1.8" class="animate-spin text-slate-500" />
+          <LoaderCircleIcon :size="24" :stroke-width="1.8" class="animate-spin text-mint" />
         </div>
         <img
           :class="cn('size-full object-cover transition duration-300 group-hover:scale-[1.02]', { 'opacity-0': isLoadingPreview || failedPreview })"
@@ -19,7 +19,7 @@
           @error="handlePreviewError"
         />
         <span
-          class="pointer-events-none absolute top-3 right-3 rounded-sm bg-ink px-2 py-1 text-xs font-semibold text-white opacity-0 shadow-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100"
+          class="pointer-events-none absolute top-3 right-3 rounded-sm bg-mint px-2 py-1 text-xs font-semibold text-paper opacity-0 shadow-sm transition-opacity group-hover/image:opacity-100 group-focus-visible/image:opacity-100"
           role="tooltip"
         >
           Copiar URL

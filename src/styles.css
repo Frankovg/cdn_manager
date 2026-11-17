@@ -2,11 +2,11 @@
 @import 'tw-animate-css';
 
 @font-face {
-  font-family: 'DM Sans';
+  font-family: 'Readex Pro';
   font-style: normal;
-  font-weight: 400 600;
+  font-weight: 300 600;
   font-display: swap;
-  src: url('/fonts/dm-sans-latin-variable.woff2') format('woff2');
+  src: url('/fonts/readex-pro-latin-variable.woff2') format('woff2');
 }
 
 @font-face {
@@ -20,16 +20,21 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-ink: #141922;
-  --color-muted: #697180;
-  --color-paper: #f5f6f2;
-  --color-surface: #ffffff;
-  --color-line: #dfe3df;
-  --color-blue: #3563dc;
-  --color-blue-dark: #2447a5;
-  --color-coral: #f16d55;
-  --font-display: 'DM Sans', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  /* Palette aligned with the web portfolio: dark background, mint primary and pink accent */
+  --color-ink: #ffffffe6;
+  --color-muted: #ffffffb3;
+  --color-paper: #121212;
+  --color-surface: #1b1b1b;
+  --color-raised: #242424;
+  --color-line: #d9d9d91a;
+  --color-mint: #5cedc2;
+  --color-mint-dark: #3fd3a8;
+  --color-dark-primary: #122f27;
+  --color-pink: #e453bc;
+  --color-danger: #ff2301;
+  --color-warning: #f5ec28;
+  --font-display: 'Readex Pro', system-ui, sans-serif;
+  --font-body: 'Readex Pro', system-ui, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
@@ -40,28 +45,28 @@
   --card-foreground: var(--color-ink);
   --popover: var(--color-surface);
   --popover-foreground: var(--color-ink);
-  --primary: var(--color-blue);
-  --primary-foreground: #ffffff;
-  --secondary: #e7eaf0;
+  --primary: var(--color-mint);
+  --primary-foreground: var(--color-paper);
+  --secondary: var(--color-raised);
   --secondary-foreground: var(--color-ink);
-  --muted: #eef0eb;
+  --muted: var(--color-raised);
   --muted-foreground: var(--color-muted);
-  --accent: #eef0eb;
+  --accent: var(--color-dark-primary);
   --accent-foreground: var(--color-ink);
-  --destructive: #b42318;
+  --destructive: var(--color-danger);
   --destructive-foreground: #ffffff;
   --border: var(--color-line);
   --input: var(--color-line);
-  --ring: var(--color-blue);
+  --ring: var(--color-mint);
   --radius: 0.35rem;
 }
 
 @utility btn-primary {
-  @apply inline-flex items-center gap-4 rounded-sm border-0 bg-blue px-4 py-3 text-xs font-semibold text-white transition hover:bg-blue-dark;
+  @apply inline-flex items-center gap-4 rounded-sm border-0 bg-mint px-4 py-3 text-xs font-semibold text-paper transition hover:bg-mint-dark;
 }
 
 @utility btn-secondary {
-  @apply inline-flex items-center gap-4 rounded-sm border-0 bg-zinc-200 px-4 py-3 text-xs font-semibold text-ink transition hover:bg-zinc-300;
+  @apply inline-flex items-center gap-4 rounded-sm border-0 bg-raised px-4 py-3 text-xs font-semibold text-ink transition hover:bg-dark-primary;
 }
 
 @layer base {
@@ -73,6 +78,7 @@
 
   html {
     min-width: 20rem;
+    color-scheme: dark;
     background: var(--color-paper);
   }
 
@@ -83,6 +89,8 @@
     color: var(--color-ink);
     background: var(--color-paper);
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   button,
@@ -101,7 +109,7 @@
 
   button:focus-visible,
   a:focus-visible {
-    outline: 3px solid var(--color-coral);
+    outline: 2px solid var(--color-mint);
     outline-offset: 4px;
   }
 
@@ -110,6 +118,11 @@
   h3,
   p {
     margin-top: 0;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-dark-primary) transparent;
   }
 }
 
@@ -132,28 +145,28 @@
   }
 
   .ui-button-default {
-    background: var(--color-blue);
-    color: white;
+    background: var(--color-mint);
+    color: var(--color-paper);
   }
 
   .ui-button-default:hover:not(:disabled) {
-    background: var(--color-blue-dark);
+    background: var(--color-mint-dark);
   }
 
   .ui-button-outline {
     border-color: var(--color-line);
-    background: var(--color-surface);
+    background: var(--color-paper);
     color: var(--color-ink);
   }
 
   .ui-button-outline:hover:not(:disabled),
   .ui-button-secondary:hover:not(:disabled) {
-    border-color: var(--color-blue);
-    background: var(--color-paper);
+    border-color: var(--color-mint);
+    background: var(--color-dark-primary);
   }
 
   .ui-button-secondary {
-    background: #e7eaf0;
+    background: var(--color-raised);
     color: var(--color-ink);
   }
 
@@ -163,18 +176,18 @@
   }
 
   .ui-button-ghost:hover:not(:disabled) {
-    background: rgba(223, 227, 223, 0.55);
+    background: var(--color-dark-primary);
     color: var(--color-ink);
   }
 
   .ui-button-link {
     background: transparent;
-    color: var(--color-blue);
+    color: var(--color-mint);
     padding: 0.35rem 0;
   }
 
   .ui-button-destructive {
-    background: #b42318;
+    background: var(--color-danger);
     color: white;
   }
 
@@ -200,7 +213,7 @@
     width: 100%;
     border: 1px solid var(--color-line);
     border-radius: 0.35rem;
-    background: var(--color-surface);
+    background: var(--color-paper);
     color: var(--color-ink);
     font: inherit;
     font-size: 0.8125rem;
@@ -225,10 +238,16 @@
     resize: vertical;
   }
 
+  .ui-input::placeholder,
+  .ui-textarea::placeholder {
+    color: var(--color-muted);
+    opacity: 0.7;
+  }
+
   .ui-input:focus,
   .ui-textarea:focus {
-    border-color: var(--color-blue);
-    box-shadow: 0 0 0 3px rgba(53, 99, 220, 0.14);
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px rgba(92, 237, 194, 0.14);
   }
 
   .ui-input:disabled,
@@ -239,7 +258,7 @@
   .ui-scroll-area {
     min-height: 0;
     overflow-y: auto;
-    scrollbar-color: #c7ccd4 transparent;
+    scrollbar-color: var(--color-dark-primary) transparent;
     scrollbar-width: thin;
   }
 }

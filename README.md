@@ -1,66 +1,66 @@
 # CDN Assets Manager
 
-Aplicación interna para subir, organizar y compartir imágenes públicas. Cada imagen queda alojada en un CDN y se obtiene una URL pública lista para usar en sitios, emails o cualquier otro proyecto.
+An internal app for uploading, organizing, and sharing public images. Every image is hosted on a CDN and gets a public URL that is ready to use in websites, emails, or any other project.
 
-## Qué hace
+## Features
 
-- **Proyectos:** las imágenes se agrupan por proyecto. La barra lateral lista los proyectos y permite buscarlos por nombre. Solo los usuarios con permiso pueden crear proyectos (ver [Permisos](#permisos)).
-- **Subida de imágenes:** se pueden subir varias imágenes a la vez, en formato JPG, PNG, WebP o SVG y de hasta 4 MB cada una. Al terminar, la URL pública se copia al portapapeles.
-- **Biblioteca:** las imágenes de cada proyecto se muestran en una grilla paginada, con búsqueda por título, descripción o nombre de archivo y filtro por rango de fechas.
-- **Detalle y metadatos:** cada imagen tiene título y descripción editables. También guarda quién la subió, cuándo, el tamaño y el tipo de archivo.
-- **Acceso privado:** todas las páginas requieren una sesión válida de Clerk; no hay páginas públicas.
+- **Projects:** images are grouped by project. The sidebar lists every project and lets you search them by name. Only users with permission can create projects (see [Permissions](#permissions)).
+- **Image uploads:** upload several images at once, in JPG, PNG, WebP, or SVG format, up to 4 MB each. When the upload finishes, the public URL is copied to the clipboard.
+- **Library:** each project's images are shown in a paginated grid, with search by title, description, or file name and a date range filter.
+- **Details and metadata:** every image has an editable title and description. It also records who uploaded it, when, its size, and its file type.
+- **Private access:** every page requires a valid Clerk session; there are no public pages.
 
-## Tecnologías
+## Tech stack
 
-| Área              | Tecnología                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------- |
-| Framework web     | [Astro](https://astro.build) 7 en modo servidor (adapter de Node standalone)                            |
-| Interfaz          | [Vue](https://vuejs.org) 3 + [Vue Router](https://router.vuejs.org)                                     |
-| Estilos y UI      | [Tailwind CSS](https://tailwindcss.com) 4, [Reka UI](https://reka-ui.com), [Lucide](https://lucide.dev) |
-| Base de datos     | [Convex](https://convex.dev) (datos en tiempo real, queries, mutations y HTTP actions)                  |
-| Autenticación     | [Clerk](https://clerk.com)                                                                              |
-| Almacenamiento    | [UploadThing](https://uploadthing.com) (archivos y CDN)                                                 |
-| Errores           | [Sentry](https://sentry.io) (solo en el servidor)                                                       |
-| Calidad de código | TypeScript, ESLint, Prettier, Vitest                                                                    |
+| Area           | Technology                                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------------- |
+| Web framework  | [Astro](https://astro.build) 7 in server mode (standalone Node adapter)                                 |
+| UI             | [Vue](https://vuejs.org) 3 + [Vue Router](https://router.vuejs.org)                                     |
+| Styling and UI | [Tailwind CSS](https://tailwindcss.com) 4, [Reka UI](https://reka-ui.com), [Lucide](https://lucide.dev) |
+| Database       | [Convex](https://convex.dev) (real-time data, queries, mutations, and HTTP actions)                     |
+| Authentication | [Clerk](https://clerk.com)                                                                              |
+| Storage        | [UploadThing](https://uploadthing.com) (files and CDN)                                                  |
+| Error tracking | [Sentry](https://sentry.io) (server only)                                                               |
+| Code quality   | TypeScript, ESLint, Prettier, Vitest                                                                    |
 
-### Cómo encajan las piezas
+### How the pieces fit together
 
-1. El navegador inicia sesión con **Clerk** y usa ese token para hablar con **Convex**.
-2. Para subir una imagen, el navegador llama a `/api/upload`, un endpoint de **Astro** que expone el router de **UploadThing**.
-3. Antes de aceptar el archivo, ese endpoint valida la sesión del usuario y que el proyecto exista, usando las HTTP actions de Convex (`convex/http.ts`).
-4. Cuando UploadThing termina la subida, el servidor registra la imagen en Convex. Esa llamada se autentica con un secreto compartido (`UPLOADTHING_CALLBACK_SECRET`).
+1. The browser signs in with **Clerk** and uses that token to talk to **Convex**.
+2. To upload an image, the browser calls `/api/upload`, an **Astro** endpoint that serves the **UploadThing** router.
+3. Before accepting the file, that endpoint checks the user's session and that the project exists, using Convex HTTP actions (`convex/http.ts`).
+4. When UploadThing finishes the upload, the server records the image in Convex. That call is authenticated with a shared secret (`UPLOADTHING_CALLBACK_SECRET`).
 
-## Requisitos
+## Requirements
 
-- **Node.js** 22.12 o superior (la imagen de Docker usa Node 24).
-- **pnpm** 10 o superior. El proyecto fija `pnpm@10.14.0` en `package.json`; con [Corepack](https://nodejs.org/api/corepack.html) alcanza con `corepack enable`.
-- Cuentas en los servicios de terceros que se listan abajo.
+- **Node.js** 22.12 or later (the Docker image uses Node 24).
+- **pnpm** 10 or later. The project pins `pnpm@10.14.0` in `package.json`; with [Corepack](https://nodejs.org/api/corepack.html), running `corepack enable` is enough.
+- Accounts for the third-party services listed below.
 
-## Cuentas de terceros
+## Third-party accounts
 
 ### Convex
 
-Base de datos y backend.
+Database and backend.
 
-1. Crear una cuenta en [convex.dev](https://convex.dev).
-2. Al correr `pnpm convex:dev` por primera vez, el CLI pide iniciar sesión y crea (o vincula) un deployment de desarrollo. Las URLs del deployment aparecen en el dashboard de Convex:
+1. Create an account at [convex.dev](https://convex.dev).
+2. The first time you run `pnpm convex:dev`, the CLI asks you to log in and creates (or links) a development deployment. The deployment URLs are shown in the Convex dashboard:
    - `https://<deployment>.convex.cloud` → `PUBLIC_CONVEX_URL`
    - `https://<deployment>.convex.site` → `CONVEX_ACTIONS_URL`
-3. Configurar las variables de entorno **del deployment de Convex**, no del `.env`:
+3. Set these environment variables **on the Convex deployment**, not in `.env`:
 
    ```sh
-   npx convex env set CLERK_JWT_ISSUER_DOMAIN https://<tu-instancia>.clerk.accounts.dev
-   npx convex env set UPLOADTHING_CALLBACK_SECRET <el-mismo-valor-que-en-el-env>
+   npx convex env set CLERK_JWT_ISSUER_DOMAIN https://<your-instance>.clerk.accounts.dev
+   npx convex env set UPLOADTHING_CALLBACK_SECRET <same-value-as-in-your-env-file>
    ```
 
 ### Clerk
 
-Autenticación de usuarios.
+User authentication.
 
-1. Crear una aplicación en [clerk.com](https://clerk.com).
-2. Copiar la **Publishable key** en `PUBLIC_CLERK_PUBLISHABLE_KEY`.
-3. Copiar el **Issuer** (Frontend API URL, del estilo `https://<tu-instancia>.clerk.accounts.dev`) en la variable `CLERK_JWT_ISSUER_DOMAIN` de Convex.
-4. Crear un **JWT template** llamado exactamente `convex` (Clerk tiene una plantilla predefinida para Convex) y agregarle el claim de permisos:
+1. Create an application at [clerk.com](https://clerk.com).
+2. Copy the **Publishable key** into `PUBLIC_CLERK_PUBLISHABLE_KEY`.
+3. Copy the **Issuer** (the Frontend API URL, such as `https://<your-instance>.clerk.accounts.dev`) into the Convex `CLERK_JWT_ISSUER_DOMAIN` variable.
+4. Create a **JWT template** named exactly `convex` (Clerk ships a predefined template for Convex) and add the permissions claim:
 
    ```json
    {
@@ -70,23 +70,23 @@ Autenticación de usuarios.
 
 ### UploadThing
 
-Almacenamiento de archivos y CDN.
+File storage and CDN.
 
-1. Crear una app en [uploadthing.com](https://uploadthing.com).
-2. Copiar el token desde **API Keys** en `UPLOADTHING_TOKEN`.
+1. Create an app at [uploadthing.com](https://uploadthing.com).
+2. Copy the token from **API Keys** into `UPLOADTHING_TOKEN`.
 
-### Sentry (opcional)
+### Sentry (optional)
 
-Reporte de errores del servidor.
+Server error reporting.
 
-- `SENTRY_DSN` habilita el envío de errores.
-- `SENTRY_AUTH_TOKEN` (en el entorno del build) permite subir los source maps.
+- `SENTRY_DSN` enables error reporting.
+- `SENTRY_AUTH_TOKEN` (in the build environment) enables source map uploads.
 
-Sin estas variables la aplicación funciona igual.
+The app works the same without these variables.
 
-## Permisos
+## Permissions
 
-Cualquier usuario autenticado puede ver proyectos, subir imágenes y editar sus metadatos. Para **crear proyectos**, el usuario necesita esta metadata pública en Clerk (**Users → usuario → Metadata → Public**):
+Any signed-in user can view projects, upload images, and edit their metadata. To **create projects**, a user needs this public metadata in Clerk (**Users → user → Metadata → Public**):
 
 ```json
 {
@@ -94,71 +94,71 @@ Cualquier usuario autenticado puede ver proyectos, subir imágenes y editar sus 
 }
 ```
 
-## Cómo levantar el proyecto
+## Getting started
 
-1. Instalar dependencias:
+1. Install dependencies:
 
    ```sh
    pnpm i
    ```
 
-2. Crear el archivo de entorno a partir del ejemplo y completarlo con los valores de tus cuentas:
+2. Create the environment file from the example and fill it in with the values from your accounts:
 
    ```sh
    cp .env.example .env
    ```
 
-   | Variable                       | Dónde se usa        | Descripción                                                       |
-   | ------------------------------ | ------------------- | ----------------------------------------------------------------- |
-   | `PUBLIC_CLERK_PUBLISHABLE_KEY` | Cliente             | Publishable key de Clerk.                                         |
-   | `PUBLIC_CONVEX_URL`            | Cliente             | URL `.convex.cloud` del deployment.                               |
-   | `PUBLIC_UPLOAD_ENDPOINT_URL`   | Cliente (opcional)  | URL alternativa del endpoint de subida.                           |
-   | `CONVEX_ACTIONS_URL`           | Servidor            | URL `.convex.site` del deployment (HTTP actions).                 |
-   | `UPLOADTHING_TOKEN`            | Servidor            | Token de la app de UploadThing.                                   |
-   | `UPLOADTHING_CALLBACK_SECRET`  | Servidor + Convex   | Secreto compartido entre Astro y Convex. Debe coincidir en ambos. |
-   | `SENTRY_DSN`                   | Servidor (opcional) | DSN de Sentry.                                                    |
-   | `VERSION`                      | Servidor (opcional) | Versión que informa el endpoint `/health`.                        |
+   | Variable                       | Used by           | Description                                               |
+   | ------------------------------ | ----------------- | --------------------------------------------------------- |
+   | `PUBLIC_CLERK_PUBLISHABLE_KEY` | Client            | Clerk publishable key.                                    |
+   | `PUBLIC_CONVEX_URL`            | Client            | The deployment's `.convex.cloud` URL.                     |
+   | `PUBLIC_UPLOAD_ENDPOINT_URL`   | Client (optional) | Alternative URL for the upload endpoint.                  |
+   | `CONVEX_ACTIONS_URL`           | Server            | The deployment's `.convex.site` URL (HTTP actions).       |
+   | `UPLOADTHING_TOKEN`            | Server            | UploadThing app token.                                    |
+   | `UPLOADTHING_CALLBACK_SECRET`  | Server + Convex   | Secret shared by Astro and Convex. It must match in both. |
+   | `SENTRY_DSN`                   | Server (optional) | Sentry DSN.                                               |
+   | `VERSION`                      | Server (optional) | Version reported by the `/health` endpoint.               |
 
-3. Levantar Convex y Astro, cada uno en su propia terminal:
+3. Start Convex and Astro, each in its own terminal:
 
    ```sh
-   pnpm convex:dev   # sincroniza las funciones de convex/ con el deployment
-   pnpm dev          # servidor de Astro en http://localhost:4321
+   pnpm convex:dev   # syncs the functions in convex/ with the deployment
+   pnpm dev          # Astro server at http://localhost:4321
    ```
 
-4. Abrir [http://localhost:4321](http://localhost:4321) e iniciar sesión con Clerk.
+4. Open [http://localhost:4321](http://localhost:4321) and sign in with Clerk.
 
 ## Scripts
 
-| Comando               | Qué hace                                               |
-| --------------------- | ------------------------------------------------------ |
-| `pnpm dev`            | Servidor de desarrollo de Astro.                       |
-| `pnpm convex:dev`     | Sincroniza las funciones de Convex en modo desarrollo. |
-| `pnpm convex:codegen` | Regenera los tipos de `convex/_generated/`.            |
-| `pnpm typecheck`      | Chequeo de tipos con `astro check`.                    |
-| `pnpm lint`           | ESLint.                                                |
-| `pnpm format`         | Formatea el código con Prettier.                       |
-| `pnpm test`           | Tests con Vitest.                                      |
-| `pnpm build`          | Typecheck + build de producción en `dist/`.            |
-| `pnpm preview`        | Sirve el build de producción localmente.               |
-| `pnpm deploy`         | Despliega las funciones de Convex y ejecuta el build.  |
+| Command               | What it does                                     |
+| --------------------- | ------------------------------------------------ |
+| `pnpm dev`            | Astro development server.                        |
+| `pnpm convex:dev`     | Syncs the Convex functions in development mode.  |
+| `pnpm convex:codegen` | Regenerates the types in `convex/_generated/`.   |
+| `pnpm typecheck`      | Type checking with `astro check`.                |
+| `pnpm lint`           | ESLint.                                          |
+| `pnpm format`         | Formats the code with Prettier.                  |
+| `pnpm test`           | Vitest tests.                                    |
+| `pnpm build`          | Type check + production build in `dist/`.        |
+| `pnpm preview`        | Serves the production build locally.             |
+| `pnpm deploy`         | Deploys the Convex functions and runs the build. |
 
-## Estructura
+## Project structure
 
 ```text
-convex/            Backend: esquema, queries, mutations, HTTP actions y migraciones
+convex/            Backend: schema, queries, mutations, HTTP actions, and migrations
 src/
-  components/      Componentes Vue (y componentes de UI en components/ui)
-  composables/     Lógica reutilizable (proyectos, biblioteca, subidas)
-  pages/           Rutas de Astro: /api/upload y /health
-  router/          Vue Router con los guards de autenticación
-  server/          Router de UploadThing (solo servidor)
-  services/        Clientes de Convex y UploadThing, validaciones
-  views/           Vistas de la aplicación
-tests/             Tests de Vitest
-scripts/jenkins/   Pipelines de CI
+  components/      Vue components (UI components live in components/ui)
+  composables/     Reusable logic (projects, library, uploads)
+  pages/           Astro routes: /api/upload and /health
+  router/          Vue Router with the authentication guards
+  server/          UploadThing router (server only)
+  services/        Convex and UploadThing clients, validation
+  views/           Application views
+tests/             Vitest tests
+scripts/jenkins/   CI pipelines
 ```
 
-## Producción
+## Production
 
-El `Dockerfile` construye la aplicación y la sirve con `node dist/server/entry.mjs`. El endpoint `/health` responde con la versión desplegada y sirve como chequeo de salud.
+The `Dockerfile` builds the app and serves it with `node dist/server/entry.mjs`. The `/health` endpoint responds with the deployed version and works as a health check.

@@ -2,9 +2,9 @@
 
 set -eux
 
-make build
+pnpm i
 
-make lint
-make test
+pnpm run lint
+pnpm run test
 
 pnpm build

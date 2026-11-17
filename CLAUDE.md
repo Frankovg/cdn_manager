@@ -1,7 +1,3 @@
-# Commands
-
-- Locales are regenerated from the source YAML files with the command `make locales` to update the TypeScript files.
-
 # Code Style
 
 - Use `!foo.length` instead of `foo.length === 0`. Shorten boolean checks to `if (foo)` when checking for foo not being empty, null or undefined.

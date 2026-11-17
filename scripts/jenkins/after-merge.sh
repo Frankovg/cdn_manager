@@ -9,10 +9,10 @@ export GOOGLE_ZONE=europe-west1-b
 
 configure-google-cloud
 
-make build
+pnpm i
 
-make lint
-make test
+pnpm run lint
+pnpm run test
 
 eval "$(whisper build)"
 whisper deploy

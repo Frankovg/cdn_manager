@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { CopyIcon, EyeIcon, LoaderCircleIcon } from 'lucide-vue-next'
+import { EyeIcon, LoaderCircleIcon } from 'lucide-vue-next'
 import type { ImageRecord } from '@/services/convex'
 import { Button } from '@/components/ui/button'
 import { cn } from 'cn'

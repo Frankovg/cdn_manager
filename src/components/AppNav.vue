@@ -8,7 +8,7 @@
         {{ selectedProject?.name || 'CDN Assets' }}
       </span>
     </div>
-    <p class="text-sm font-semibold">Altipla Consulting</p>
+    <p class="text-sm font-semibold">Frankovg</p>
     <UserButton v-if="authState.isSignedIn" />
   </nav>
 </template>

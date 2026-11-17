@@ -51,12 +51,12 @@
             <button
               v-for="project in filteredProjects"
               :key="project._id"
+              :ref="(element) => setProjectLink(project._id, element)"
               class="flex w-full items-center gap-2 rounded-md border border-transparent px-3 py-2.5 text-left text-xs text-muted transition hover:bg-dark-primary hover:text-ink"
               :class="{
                 'border-mint/40 bg-dark-primary text-mint': project._id === selectedProjectId,
               }"
               type="button"
-              :ref="(element) => setProjectLink(project._id, element)"
               @click="selectProject(project._id)"
             >
               <span class="size-1.5 shrink-0 rounded-full bg-muted/40" :class="{ 'bg-pink': project._id === selectedProjectId }" aria-hidden="true" />

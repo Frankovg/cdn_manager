@@ -24,8 +24,8 @@ export default defineConfig({
     vue({ appEntrypoint: '/src/astro-vue-app' }),
     sentry({
       authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: 'altipla',
-      project: 'altipla-node-backends',
+      org: 'frankovg',
+      project: 'cdn-manager',
       telemetry: false,
       enabled: {
         client: false,
